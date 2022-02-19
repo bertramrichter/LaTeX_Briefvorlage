@@ -1,0 +1,62 @@
+\documentclass[twoside]{brbrief}
+
+\usepackage{lipsum}
+
+\makeatletter
+
+\makeatother
+
+
+	\ZViii{elektronische Freimachungsvermerke}
+	\ZVii{Vorausfügung}
+	\ZVi{z.\,B.\ Einschreiben}
+	\AZFirma{Firma}
+	\AZAnrede{Frau/Herr}
+	\AZName{Name des Addressaten}
+	\AZStrasse{Zielstraße 1}
+	\AZPLZOrt{12345 Zielort}
+	\AZLand{Deutschland}
+	\Betreff{Betreff}
+	%\Briefkopf{}
+	
+\begin{document}
+	\maketitle{}
+	\Anrede{Liebe(r) Addressat(in)}
+	
+	\lipsum[1-2]
+	
+	Zu tun:
+	\begin{itemize}
+		\item Strich in Adressfeld genau so lang, wie längster Eintrag
+		\item Dokumentation für jede Option
+		\item Zusatzinfos unter Absenderinfos
+		\item Location Absnederinfos configurable
+		\item Briefpapier (Hintergrundbild/PDF) optional
+	\end{itemize}
+	
+	\Gruss{Dein}
+	
+	% Post Scriptum
+	%PS: Ich bin bis März nur telefonisch erreichbar.
+	
+	% Anlage(n)
+	% Standardmäßig wird "Anlage(n)" eingefügt, dies kann überschrieben werden, hier mit "Anlage" oder "Anlagen"
+	%\setkomavar*{enclseparator}{Anlage}
+	%\setkomavar*{enclseparator}{Anlagen}
+	%\encl{Kopie des Ausweises}
+	
+	% Weitere PDFs können automatisch angefügt werden, z.B. Ahnänge.
+	%\includepdf[pages=-,openright]{pfad/zu/weiteren/pdfs/dokument.pdf}
+	% Pfad ist relativ zu dieser tex-Datei. Mit .. ein Verzeichnis hoch.
+	% Der pages-Parameter spezifiziert welche Seiten eingefügt werden.
+	% Beispiele:
+	% pages=-				alle Seiten
+	% pages={1-4}			Seite 1-4
+	% pages={1,4,5}			Seite 1, 4 und 5
+	% pages={3,{},8-11,15}	Seite 3, leere Seite, Seite 8-11 und Seite 15
+	% Der openright-Parameter startet die Anlagen auf ungerader (rechter) Seite, d.h. notfalls wird eine leere Seite
+	% eingefügt. Im doppelseitigem Druck wird dadurch besser zwischen Brief und Anlage getrennt. Für einseitigen Druck
+	% entfernen.
+	
+	
+\end{document}

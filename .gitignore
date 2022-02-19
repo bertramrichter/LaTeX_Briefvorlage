@@ -1,0 +1,4 @@
+# Ignoriere Hilfsdateien
+*
+!*.tex
+!*cls
