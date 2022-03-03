@@ -1,5 +1,10 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{brbrief}[Briefvorlage by Bertram Richter]
+
+% Calls name and version
+\newcommand{\classname}{brbrief}
+\newcommand{\version}{0.1}
+
+\ProvidesClass{\classname}[Briefvorlage by Bertram Richter]
 
 % Ignored options
 \DeclareOption{twocolumn}{\OptionNotUsed\ClassWarning{brbrief}{Option "twocolumn" is not supported, will be ignored.}{}}
@@ -162,34 +167,36 @@
 \newcommand*{\@AZLand}{}										% Speichervariable für das Land des Adressaten.
 \newcommand*{\AZLand}[1]{\renewcommand*{\@AZLand}{#1}}			% Legt das Land des Adressaten fest.
 % Absender
-\newcommand*{\@ABSName}{}								% Speichervariable für den Namen des Schreibenden.
+\newcommand*{\@ABSName}{}										% Speichervariable für den Namen des Schreibenden.
 \newcommand*{\ABSName}[1]{\renewcommand*{\@ABSName}{#1}}		% Legt den den Namen des Schreibenden fest.
-\newcommand*{\@ABSStrasse}{}							% Speichervariable für Straße und Hausnummer des Schreibenden.
+\newcommand*{\@ABSStrasse}{}									% Speichervariable für Straße und Hausnummer des Schreibenden.
 \newcommand*{\ABSStrasse}[1]{\renewcommand*{\@ABSStrasse}{#1}}	% Legt Straße und Hausnummer des Schreibenden fest.
-\newcommand*{\@ABSPLZ}{}									% Speichervariable für die Postleitzahldes Schreibenden.
+\newcommand*{\@ABSPLZ}{}										% Speichervariable für die Postleitzahldes Schreibenden.
 \newcommand*{\ABSPLZ}[1]{\renewcommand*{\@ABSPLZ}{#1}}			% Legt die Postleitzahl des Schreibenden fest.
-\newcommand*{\@ABSOrt}{}									% Speichervariable für den Stadtnamen des Schreibenden.
+\newcommand*{\@ABSOrt}{}										% Speichervariable für den Stadtnamen des Schreibenden.
 \newcommand*{\ABSOrt}[1]{\renewcommand*{\@ABSOrt}{#1}}			% Legt den Stadtnamen des Schreibenden fest.
-\newcommand*{\@ABSPhone}{}								% Speichervariable für die Festnetznummer des Schreibenden.
+\newcommand*{\@ABSPhone}{}										% Speichervariable für die Festnetznummer des Schreibenden.
 \newcommand*{\ABSPhone}[1]{\renewcommand*{\@ABSPhone}{#1}}		% Legt die Festnetznummer des Schreibenden fest.
-\newcommand*{\@ABSMobile}{}							% Speichervariable für die Handynummer des Schreibenden.
+\newcommand*{\@ABSMobile}{}										% Speichervariable für die Handynummer des Schreibenden.
 \newcommand*{\ABSMobile}[1]{\renewcommand*{\@ABSMobile}{#1}}	% Legt die Handynummer des Schreibenden fest.
-\newcommand*{\@ABSMail}{}								% Speichervariable für die E-Mail-Adresse des Schreibenden.
+\newcommand*{\@ABSMail}{}										% Speichervariable für die E-Mail-Adresse des Schreibenden.
 \newcommand*{\ABSMail}[1]{\renewcommand*{\@ABSMail}{#1}}		% Legt die E-Mail-Adresse des Schreibenden fest.
-\newcommand*{\@ABSInfo}{}								% Speichervariable für die E-Mail-Adresse des Schreibenden.
+\newcommand*{\@ABSInfo}{}										% Speichervariable für die E-Mail-Adresse des Schreibenden.
 \newcommand*{\ABSInfo}[1]{\renewcommand*{\@ABSInfo}{#1}}		% Legt die E-Mail-Adresse des Schreibenden fest.
 % Bezugszeichenzeile
-\newcommand*{\@IhrSchreiben}{}							% Speichervariable
+\newcommand*{\@IhrSchreiben}{}										% Speichervariable
 \newcommand*{\IhrSchreiben}[1]{\renewcommand*{\@IhrSchreiben}{#1}}	% Setzt den Wert, welcher unter "Ihr Schreiben vom" kommt
-\newcommand*{\@IhrZeichen}{}								% Speichervariable
+\newcommand*{\@IhrZeichen}{}										% Speichervariable
 \newcommand*{\IhrZeichen}[1]{\renewcommand*{\@IhrZeichen}{#1}}		% Setzt den Wert, welcher unter "Ihr Zeichen" kommt
-\newcommand*{\@KundenNummer}{}							% Speichervariable
+\newcommand*{\@KundenNummer}{}										% Speichervariable
 \newcommand*{\KundenNummer}[1]{\renewcommand*{\@KundenNummer}{#1}}	% Setzt den Wert, welcher unter "Kundennummer" kommt
 %Brief
 \newcommand*{\@Betreff}{\mbox{}}								% Speichervariable für den Betreff.
 \newcommand*{\Betreff}[1]{\renewcommand*{\@Betreff}{#1}}		% Legt den Betreff des Briefs fest.
 \newcommand*{\@Briefkopf}{\mbox{}}								% Speichervariable für den Briefkopf.
 \newcommand*{\Briefkopf}[1]{\renewcommand*{\@Briefkopf}{#1}}	% Legt den Inhalt, des Briefkopfs fest.
+\newcommand*{\@Signature}{}										% Speichervariable für den Pfad zur Unterschriftsdatei.
+\newcommand*{\Signature}[1]{\renewcommand*{\@Signature}{#1}}	% Legt den Pfad der Unterschriftsdatei fest.
 
 %%% Brieffelder %%%
 % Kopfbereich
@@ -264,10 +271,15 @@
 }
 % Signatur
 \newcommand{\signatur}[1][3.5cm]{%
-	\begin{minipage}{#1}
-		\centering
-		\includegraphics[width=#1]{Unterschrift}
-	\end{minipage} \\[-8pt]
+	\PrintIfDefined{\@Signature}{%
+	\IfFileExists{\@Signature}{%
+		\begin{minipage}{#1}%
+			\centering%
+			\includegraphics[width=#1]{\@Signature}%
+		\end{minipage}\\[-8pt]%
+		}%
+		{\ClassError{\classname}{File "\@Signature" was not found. Did you specify the correct path and filename in \string\Singature{}?}{Make sure, that the file you meant, actually exists and secondly the path is spelled correctly.}}%
+	}{\par}%
 	\rule{#1}{0.5pt} \\
 		\@ABSName
 }
