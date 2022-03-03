@@ -96,7 +96,7 @@
 
 % Custom page style
 \newcommand{\ps@brief}{%
-	\renewcommand{\@oddhead}{\@faltmarken\@lochmarke}
+	\renewcommand{\@oddhead}{\if@foldmark\@faltmarken\fi\if@punchmark\@lochmarke\fi}
 	\renewcommand{\@evenhead}{\@empty}
 	\renewcommand*{\@oddfoot}{\hfill{}Seite\:\thepage{}}%
 	\renewcommand*{\@evenfoot}{Seite\:\thepage\hfill{}}%
@@ -162,26 +162,28 @@
 \newcommand*{\@AZLand}{}										% Speichervariable für das Land des Adressaten.
 \newcommand*{\AZLand}[1]{\renewcommand*{\@AZLand}{#1}}			% Legt das Land des Adressaten fest.
 % Absender
-\newcommand*{\@ABSName}{ABSName}								% Speichervariable für den Namen des Schreibenden.
+\newcommand*{\@ABSName}{}								% Speichervariable für den Namen des Schreibenden.
 \newcommand*{\ABSName}[1]{\renewcommand*{\@ABSName}{#1}}		% Legt den den Namen des Schreibenden fest.
-\newcommand*{\@ABSStrasse}{ABSStrasse}							% Speichervariable für Straße und Hausnummer des Schreibenden.
+\newcommand*{\@ABSStrasse}{}							% Speichervariable für Straße und Hausnummer des Schreibenden.
 \newcommand*{\ABSStrasse}[1]{\renewcommand*{\@ABSStrasse}{#1}}	% Legt Straße und Hausnummer des Schreibenden fest.
-\newcommand*{\@ABSPLZ}{ABSPLZ}									% Speichervariable für die Postleitzahldes Schreibenden.
+\newcommand*{\@ABSPLZ}{}									% Speichervariable für die Postleitzahldes Schreibenden.
 \newcommand*{\ABSPLZ}[1]{\renewcommand*{\@ABSPLZ}{#1}}			% Legt die Postleitzahl des Schreibenden fest.
-\newcommand*{\@ABSOrt}{ABSOrt}									% Speichervariable für den Stadtnamen des Schreibenden.
+\newcommand*{\@ABSOrt}{}									% Speichervariable für den Stadtnamen des Schreibenden.
 \newcommand*{\ABSOrt}[1]{\renewcommand*{\@ABSOrt}{#1}}			% Legt den Stadtnamen des Schreibenden fest.
-\newcommand*{\@ABSPhone}{ABSPhone}								% Speichervariable für die Festnetznummer des Schreibenden.
+\newcommand*{\@ABSPhone}{}								% Speichervariable für die Festnetznummer des Schreibenden.
 \newcommand*{\ABSPhone}[1]{\renewcommand*{\@ABSPhone}{#1}}		% Legt die Festnetznummer des Schreibenden fest.
-\newcommand*{\@ABSMobile}{ABSMobile}							% Speichervariable für die Handynummer des Schreibenden.
+\newcommand*{\@ABSMobile}{}							% Speichervariable für die Handynummer des Schreibenden.
 \newcommand*{\ABSMobile}[1]{\renewcommand*{\@ABSMobile}{#1}}	% Legt die Handynummer des Schreibenden fest.
-\newcommand*{\@ABSMail}{ABSMail}								% Speichervariable für die E-Mail-Adresse des Schreibenden.
+\newcommand*{\@ABSMail}{}								% Speichervariable für die E-Mail-Adresse des Schreibenden.
 \newcommand*{\ABSMail}[1]{\renewcommand*{\@ABSMail}{#1}}		% Legt die E-Mail-Adresse des Schreibenden fest.
+\newcommand*{\@ABSInfo}{}								% Speichervariable für die E-Mail-Adresse des Schreibenden.
+\newcommand*{\ABSInfo}[1]{\renewcommand*{\@ABSInfo}{#1}}		% Legt die E-Mail-Adresse des Schreibenden fest.
 % Bezugszeichenzeile
-\newcommand*{\@IhrSchreiben}{IhrSchreiben}							% Speichervariable
+\newcommand*{\@IhrSchreiben}{}							% Speichervariable
 \newcommand*{\IhrSchreiben}[1]{\renewcommand*{\@IhrSchreiben}{#1}}	% Setzt den Wert, welcher unter "Ihr Schreiben vom" kommt
-\newcommand*{\@IhrZeichen}{IhrZeichen}								% Speichervariable
+\newcommand*{\@IhrZeichen}{}								% Speichervariable
 \newcommand*{\IhrZeichen}[1]{\renewcommand*{\@IhrZeichen}{#1}}		% Setzt den Wert, welcher unter "Ihr Zeichen" kommt
-\newcommand*{\@KundenNummer}{KundenNummer}							% Speichervariable
+\newcommand*{\@KundenNummer}{}							% Speichervariable
 \newcommand*{\KundenNummer}[1]{\renewcommand*{\@KundenNummer}{#1}}	% Setzt den Wert, welcher unter "Kundennummer" kommt
 %Brief
 \newcommand*{\@Betreff}{\mbox{}}								% Speichervariable für den Betreff.
@@ -201,7 +203,11 @@
 	\begin{minipage}[b][45mm][c]{80mm}% [minipage outside alignment][height][aling in minipage]{width}
 		\setlength{\parindent}{0pt}%
 		\setlength{\parskip}{0pt}%
-		\begin{scriptsize}\@ABSName, \@ABSStrasse, \@ABSPLZ~\@ABSOrt\end{scriptsize}% 5mm hoch
+		\begin{scriptsize}%
+			\PrintIfDefined{\@ABSName{}}{\@ABSName{}, }{}%
+			\PrintIfDefined{\@ABSStrasse{}}{\@ABSStrasse{}, }{}%
+			\PrintIfDefined{\@ABSPLZ\@ABSOrt{}}{\@ABSPLZ{}~\@ABSOrt{}}{}%
+		\end{scriptsize}% 5mm hoch
 		\\[-.8em]\rule{80mm}{0.5pt}\\%
 		\PrintOptionalField{\@ZVZiii{}}%	zusammen 12,7 mm hoch
 		\PrintOptionalField{\@ZVZii{}}%		zusammen 12,7 mm hoch
@@ -222,11 +228,12 @@
 		\begin{flushright}%
 			\PrintOptionalField{\@ABSName{}}%
 			\PrintOptionalField{\@ABSStrasse{}}%
-			\PrintIfDefined{\@ABSPLZ{}\@ABSOrt{}} {\@ABSPLZ{}~\@ABSOrt{}\par} {}
+			\PrintIfDefined{\@ABSPLZ{}\@ABSOrt{}}{\@ABSPLZ{}~\@ABSOrt{}\par}{}
 			%\PrintOptionalField{\@ABSPLZ{}~\@ABSOrt{}}%
 			\PrintIfDefined{\@ABSPhone{}}{\phonesymbol{} \@ABSPhone{}\par}{}%
 			\PrintIfDefined{\@ABSMobile{}}{\mobilesymbol{} \@ABSMobile{}\par}{}%
 			\PrintIfDefined{\@ABSMail{}}{\mailsymbol{} \href{mailto:\@ABSMail}{\@ABSMail}\par}{}%
+			\PrintOptionalField{\@ABSInfo{}}%
 		\end{flushright}
 	\end{minipage}
 }
