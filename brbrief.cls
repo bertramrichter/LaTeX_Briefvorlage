@@ -191,12 +191,14 @@
 \newcommand*{\@KundenNummer}{}										% Speichervariable
 \newcommand*{\KundenNummer}[1]{\renewcommand*{\@KundenNummer}{#1}}	% Setzt den Wert, welcher unter "Kundennummer" kommt
 %Brief
-\newcommand*{\@Betreff}{\mbox{}}								% Speichervariable für den Betreff.
-\newcommand*{\Betreff}[1]{\renewcommand*{\@Betreff}{#1}}		% Legt den Betreff des Briefs fest.
-\newcommand*{\@Briefkopf}{\mbox{}}								% Speichervariable für den Briefkopf.
-\newcommand*{\Briefkopf}[1]{\renewcommand*{\@Briefkopf}{#1}}	% Legt den Inhalt, des Briefkopfs fest.
-\newcommand*{\@Signature}{}										% Speichervariable für den Pfad zur Unterschriftsdatei.
-\newcommand*{\Signature}[1]{\renewcommand*{\@Signature}{#1}}	% Legt den Pfad der Unterschriftsdatei fest.
+\newcommand*{\@Betreff}{}											% Speichervariable für den Betreff.
+\newcommand*{\Betreff}[1]{\renewcommand*{\@Betreff}{#1}}			% Legt den Betreff des Briefs fest.
+\newcommand*{\@Briefkopf}{}											% Speichervariable für den Briefkopf.
+\newcommand*{\Briefkopf}[1]{\renewcommand*{\@Briefkopf}{#1}}		% Legt den Inhalt, des Briefkopfs fest.
+\newcommand*{\@Briefpapier}{}										% Speichervariable für den Pfad zum Briefpapier.
+\newcommand*{\Briefpapier}[1]{\renewcommand*{\@Briefpapier}{#1}}	%  Legt den Pfad der Briefpapier fest.
+\newcommand*{\@Signature}{}											% Speichervariable für den Pfad zur Unterschriftsdatei.
+\newcommand*{\Signature}[1]{\renewcommand*{\@Signature}{#1}}		% Legt den Pfad der Unterschriftsdatei fest.
 
 %%% Brieffelder %%%
 % Kopfbereich
@@ -205,6 +207,21 @@
 	\mbox{}\@Briefkopf
 	\end{minipage}
 }
+
+% Set an image or the first page of a pdf as background.
+\newcommand{\PrintBriefPapier}{%
+	\def\@brempty{}% temporary empty string
+	\ifx\@Briefpapier\@brempty% check if empty
+	% do nothing, -> no background
+	\else%
+	% Print background to every page
+	\IfFileExists{\@Briefpapier}{%
+		\AddToHook{shipout/background}{\put (0in,-\paperheight){\includegraphics[width=\paperwidth,height=\paperheight]{\@Briefpapier}}}%
+	}%
+	{\ClassError{\classname}{File "\@Briefpapier" was not found. Did you specify the correct path and filename in \string\Briefpapier{}?}{}}%
+	\fi%
+}
+
 % Adressfeld
 \newcommand{\anschriftzone}{%
 	\begin{minipage}[b][45mm][c]{80mm}% [minipage outside alignment][height][aling in minipage]{width}
@@ -271,17 +288,23 @@
 }
 % Signatur
 \newcommand{\signatur}[1][3.5cm]{%
-	\PrintIfDefined{\@Signature}{%
-	\IfFileExists{\@Signature}{%
-		\begin{minipage}{#1}%
-			\centering%
-			\includegraphics[width=#1]{\@Signature}%
-		\end{minipage}\\[-8pt]%
-		}%
-		{\ClassError{\classname}{File "\@Signature" was not found. Did you specify the correct path and filename in \string\Singature{}?}{Make sure, that the file you meant, actually exists and secondly the path is spelled correctly.}}%
-	}{\par}%
-	\rule{#1}{0.5pt} \\
+	{% Make prevent page braking in-between
+		\def\@brempty{}% temporary empty string
+		\ifx\@Signature\@brempty% check if empty
+			\par
+		\else%
+			\IfFileExists{\@Signature}{%
+				\begin{minipage}{#1}%
+					\centering%
+					\includegraphics[width=#1]{\@Signature}%
+				\end{minipage}\\[-8pt]%
+				}%
+				{\ClassError{\classname}{File "\@Signature" was not found. Did you specify the correct path and filename in \string\Singature{}?}{}%
+			}%
+		\fi
+		\rule{#1}{0.5pt}\\
 		\@ABSName
+	}%
 }
 % Grußformel
 \newcommand{\Gruss}[2][3.5cm]{
@@ -298,9 +321,11 @@
 	\begin{minipage}[t]{\textwidth}\anschriftzone\hfill\absenderzone\end{minipage}\\%
 	\bezugszeichenzeile{}%
 	{\flushleft\textbf{\@Betreff}\setlength{\parskip}{2\baselineskip}\par}%	Betreffzeile
-	%
+	% Set PDF metadata
 	\hypersetup{%
 		pdfsubject = {\@Betreff},%
 		pdfauthor = {\@ABSName}%
 	}%
+	% Add Briefpapier to the background
+	\PrintBriefPapier{}%
 }
