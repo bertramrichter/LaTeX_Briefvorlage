@@ -28,13 +28,9 @@
 
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[OT1]{fontenc}		% character encoding, using open type (enables open type ligatures)
-\RequirePackage[ngerman]{babel}		% for hyphenation
 \RequirePackage{CormorantGaramond}	% Nice font
 \RequirePackage{pifont}				% Used for symbols
-\RequirePackage{graphicx}
-\RequirePackage{pdfpages}			% Includen von PDFs nach dem Brief, siehe \includepdf unten
-\RequirePackage{siunitx}			% Einheiten richtig setzen
-	\sisetup{locale=DE}				% Dezimaltrenner Komma
+\RequirePackage{pdfpages}			% Include von PDFs nach dem Brief, siehe \includepdf unten
 \RequirePackage{microtype}			% for even nicer typography, load after the class file
 \RequirePackage[%					% als letztes Paket
 	hidelinks, 						% show no red box around links
