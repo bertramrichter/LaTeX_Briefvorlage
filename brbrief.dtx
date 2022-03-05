@@ -6,9 +6,13 @@
 \iffalse
 %</internal>
 %<*readme>
-Dies ist eine DIN 5008-konforme Briefvorlage in LaTeX für den privaten Schriftverkehr.
+Dies ist eine LaTeX-Klasse für eine DIN 5008-konforme Briefvorlage für den privaten Schriftverkehr.
+Benötigt wird eine seit 2020 veröffentlichte LaTeX-Distribution.
 
-Benötigt wird eine LaTeX-Distribution seit 2020.
+---
+
+This is a LaTeX class for a letter template, which conforms to DIN 5008, aimed to private correspondence.
+A LaTeX-distribution with release date 2020 or later is required.
 %</readme>
 %<*internal>
 \fi
@@ -23,7 +27,7 @@ Benötigt wird eine LaTeX-Distribution seit 2020.
 \askforoverwritefalse
 \preamble
 -------:| -----------------------------------------------------------------
-brbrief:| DIN 5008-conform letter class for private correspondence
+brbrief:| DIN 5008-conformant letter class for private correspondence
  Author:| \fileauthor
 License:| Released under the LaTeX Project Public License v1.3c or later
     See:| http://www.latex-project.org/lppl.txt
@@ -75,14 +79,20 @@ Running "make install" installs the files in the local TeX tree.
 % \fi
 % \iffalse
 %<*driver>
-\ProvidesFile{brbrief.dtx}
+\ProvidesFile{\jobname.dtx}
 \documentclass{ltxdoc}
 \usepackage[a4paper,margin=25mm,left=50mm,nohead]{geometry}
 \usepackage[numbered]{hypdoc}
 \usepackage[ngerman]{babel}
+\usepackage{csquotes}
+\usepackage{microtype}
+\usepackage{siunitx}
+	\sisetup{locale=DE}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
+\setlength{\parindent}{0pt}%
+\setlength{\parskip}{.5\baselineskip plus 0.2ex minus 0.2ex}%
 \begin{document}
     \DocInput{\jobname.dtx}
 \end{document}
@@ -91,33 +101,127 @@ Running "make install" installs the files in the local TeX tree.
 % 
 % \DoNotIndex{\newcommand,\newenvironment}
 % \title{\textsf{\jobname} -- \LaTeX{} Briefvorlage für private Korrespondenz
-%     \thanks{Documentation für \textsf{\jobname}~\fileversion, Datum: \filedate.}}
+%     \thanks{Documentation für \textsf{\jobname}~\fileversion, Versionsdatum: \filedate.}}
 % \author{\fileauthor}
 % \date{\filedate}
 %
 % \maketitle
 %
 % \begin{abstract}
-%     DIN~5008-konforme Briefvorlage in LaTeX für den privaten Schriftverkehr
+%     \noindent
+%     Dieses Dokument beschreibt \textsf{\jobname}.
+%     Mit \textsf{\jobname} können DIN~5008-konforme Briefe relativ unkompliziert verfasst und gesetzt werden.
+%     Gedacht ist sie zur Nutzung as Briefvorlage für den privaten Schriftverkehr.
+%     Entwickelt, um den Ansprüchen des Autors von Stil und Einfachheit zu genügen.
 % \end{abstract}
 %
-% \section{Paketoptionen}
-% Die Klasse \textsl{\jobname}
+% \section{Klassenoptionen}
+% Die Klasse \textsf{\jobname} basiert auf \verb|article| und besitzt die folgenden Klassen-Optionen.
+% Grundsätzlich werden (fast) alle in \verb|article| verfügbaren Optionen unterstützt.
+% Jedoch ist das Papierformat auf A4 im Hochformat beschränkt.
+%
+% \DescribeMacro{oneside/twoside} Legt fest, ob die Brief einseitig oder zweiseitig gesetzt werden soll. Diese Option wird direkt and die Elternklasse \verb|article| weitergeben.
+%
+% \DescribeMacro{foldmark/nofoldmark} Aktiviert/deaktiviert die Faltmarken. Standardmäßig sind die Faltmarken aktiviert. Die Faltmarken erscheinen auf jeder ungeraden Seite (Vorderseite).
+%
+% \DescribeMacro{punchmark/nopunchmark} Aktiviert/deaktiviert die Lochmarke. Standardmäßig ist die Lochmarke aktiviert. Die Lochmarke erscheint auf jeder ungeraden Seite (Vorderseite).
 %
 % \section{Verfügbare Befehle}
+% \subsection{Adressfeld}
+% Das Adressfeld wird mit den folgenden Einträgen gefüllt.
+% Durch einen Strich getrennt erscheinen Name und Anschrift des Absenders in einer Zeile über dem eigentlichen Adressfeld.
+% Die Reihenfolge der Einträge im Brief entspricht der Reihenfolge der nachfolgend aufgeführten Befehle.
+% Nicht belegte (leer gelassene) Einträge werden ausgelassen, ohne Leerzeile zu erzeugen.
 %
+% \DescribeMacro{\ZVZiii}\marg{text} Legt eventuelle elektronische Freimachungsvermerke fest.
 %
-% \DescribeMacro{\dummyMacro}
-% This macro does nothing.\index{doing nothing|usage} It is merely an
-% example.  If this were a real macro, you would put a paragraph here
-% describing what the macro is supposed to do, what its mandatory and
-% optional arguments are, and so forth.
+% \DescribeMacro{\ZVZii}\marg{text} Legt eine eventuelle Vorausfügung fest.
 %
-% \DescribeEnv{dummyEnv}
-% This environment does nothing.  It is merely an example.
-% If this were a real environment, you would put a paragraph here
-% describing what the environment is supposed to do, what its
-% mandatory and optional arguments are, and so forth.
+% \DescribeMacro{\ZVZi}\marg{text} Legt z.\,B.\ \enquote{Einschreiben} fest.
+%
+% \DescribeMacro{\AZFirma}\marg{text} Legt den Firmennamen des Empfänger fest.
+%
+% \DescribeMacro{\AZAnrede}\marg{text} Legt die Anrede des Empfänger fest z.\,B.\ \enquote{Herr}.
+%
+% \DescribeMacro{\AZName}\marg{text} Legt eventuelle akademische Grade und den Namen des Empfänger fest.
+%
+% \DescribeMacro{\AZStrasse}\marg{text} Legt Straße und Hausnummer des Empfänger fest.
+%
+% \DescribeMacro{\AZPLZOrt}\marg{text} Legt die Postleitzahl und den Ort des Empfänger fest.
+%
+% \DescribeMacro{\AZLand}\marg{text} Legt das Land des Empfänger fest.
+%
+% \subsection{Absenderfeld}
+% Das Absenderfeld erscheint rechts neben dem Adressfeld.
+% Die Reihenfolge der Einträge im Brief entspricht der Reihenfolge der nachfolgend aufgeführten Befehle.
+% Nicht belegte (leer gelassene) Einträge werden ausgelassen und erzeugen keine Leerzeile.
+%
+% \DescribeMacro{\ABSName}\marg{text} Legt Straße und Hausnummer des Absenders fest.
+% Dieser dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld, im Absenderfeld sowie und der Schlussfloskel unter der Unterschrift.
+% Zusätzlich wird er als Autor den Metadaten der erzeugten PDF hinzugefügt.
+%
+% \DescribeMacro{\ABSStrasse}\marg{text} Legt den Namen des Absenders fest.
+% Dieser dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld und im Absenderfeld.
+%
+% \DescribeMacro{\ABSPLZ}\marg{text} Legt die Postleitzahl des Absenders fest.
+% Dieser dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld und im Absenderfeld.
+%
+% \DescribeMacro{\ABSOrt}\marg{text} Legt den Ort des Absenders fest.
+%
+% \DescribeMacro{\ABSPhone}\marg{text} Legt die Festnetznummer des Absenders fest.
+%
+% \DescribeMacro{\ABSMobile}\marg{text} Legt die Mobiltelefonnummer des Absenders fest.
+%
+% \DescribeMacro{\ABSMail}\marg{text} Legt die E-Mail-Adresse des Absenders fest.
+%
+% \DescribeMacro{\ABSInfo}\marg{text} Legt eventuell benötigte zusätzliche Informationen über den Absender fest.
+% Sofern diese aus mehreren Zeilen mit manuellen Umbrüchen bestehen, sind Zeilen mit \verb|\par| umzubrechen. Leerzeilen entsprechend mit \verb|~\par| einfügen.
+%
+% \subsection{Bezugszeichenzeile und Betreff}
+% Die Bezugszeichenzeile wird unterhalb des Adressfelds und des Absenderfelds eingefügt.
+% Die Reihenfolge der Einträge im Brief entspricht der Reihenfolge der nachfolgend aufgeführten Befehle.
+% Nicht belegte (leer gelassene) Einträge werden ausgelassen.
+% Sofern keine folgenden Einträge besetzt ist, wird die Bezugszeichenzeile einzeilig ausgeführt und enthält nur das Datum auf der rechten Seite.
+%
+% \DescribeMacro{\IhrZeichen}\marg{text} Legt das Bezugszeichen fest, welches sich auf den Adressaten bezieht.
+% Sofern gesetzt, wird es mit \enquote{Ihr Zeichen} überschrieben.
+%
+% \DescribeMacro{\IhrSchreiben}\marg{text} Legt das Bezugszeichen fest, welches sich auf das beantwortete Schreiben bezieht.
+% Sofern gesetzt, wird es mit \enquote{Ihr Schreiben vom} überschrieben.
+%
+% \DescribeMacro{\KundenNummer}\marg{text} Legt das die Kundennummer des Schreibenden fest.
+% Sofern gesetzt, wird es mit \enquote{Kundennummer} überschrieben.
+%
+% \DescribeMacro{\Betreff}\marg{text} Legt den Text der Betreffzeile fest, welche unter der Bezugszeichenzeile eingefügt wird.
+%
+% \subsection{Erscheinungsbild des Briefs}
+% Hier sind Befehle beschrieben, welche das das allgemeine Aussehen des Briefs beeinflussen.
+%
+% \DescribeMacro{\Briefkopf}\marg{text} Legt den Inhalt des Briefkopfs (Bereich über dem Adressfeld) fest.
+% Grundsätzlich ist jeglicher \LaTeX{} Inhalt zulässig. Dieser erscheint nur auf der ersten Seite.
+% Zu beachten ist, dass der Bereich des Briefkopfs nicht nach unten beschränkt ist.
+% Somit kann Inhalt auch bis in das Adressfeld andere Bereiche laufen.
+%
+% \DescribeMacro{\Briefpapier}\marg{Dateiname} Legt die Datei fest, welche als Briefpapier (Hintergrund für alle Seiten) verwendet werden soll.
+% Möglich ist eine Bilddatei (PNG, JPG) oder eine PDF.
+% Sofern eine PDF genutzt wird, wird jedoch nur die erste Seite verwendet.
+%
+% \DescribeMacro{\Signatur}\marg{Dateiname} Legt die Datei fest, welche als Unterschrift verwendet werden soll.
+% Möglich ist eine Bilddatei (PNG, JPG) oder eine PDF.
+% Sofern eine PDF genutzt wird, wird jedoch nur die erste Seite verwendet.
+% Sofern keine Datei spezifiziert ist, wird entsprechend Platz für eine händische Unterschrift gelassen.
+%
+% \subsection{Briefkörper}
+% Bisher wurde alles in der Präambel festgelegt. In diesem Abschnitt sind die Befehle beschrieben, welche innerhalb der \verb|document|-Umgebung verfügbar sind.
+%
+% \DescribeMacro{\maketitle} Kümmert sich um den Satz der ersten Seite.
+% Dies ist das erste Befehl, welcher innerhalb der \verb|document|-Umgebung aufgerufen werden sollte.
+% Es wird der Briefkopf, Adressfeld, Absenderfeld, Bezugszeichen- und Betreffzeile gesetzt.
+%
+% \DescribeMacro{\Anrede} \marg{Floskel} Eröffnet den Brief mit der Anrede. Am Ende wird automatisch ein Komma angehängt.
+%
+% \DescribeMacro{\Gruss} \oarg{width}\marg{Grußfloskel} Beendet den Brief mit der Grußfloskel, Unterschift und dem Namen des Absenders
+% Das optionale Argument \oarg{width} gibt die Breite (Standard \SI{3.5}{\centi\meter}) der Unterschrift und des Unterschriftsstrich an.
 %
 %\StopEventually{^^A
 %  \PrintChanges
@@ -125,7 +229,9 @@ Running "make install" installs the files in the local TeX tree.
 %}
 %
 % \section{Implementation}
-% Nachfolgend ist der kommentiere Quellcode gezeigt.
+% Nachfolgend ist der kommentierte Quellcode gezeigt.
+% Als normaler Endnutzer kann hier aufgehört werden, zu lesen.
+% \subsection{Klassenbeginn und Optionen und benötigte Pakete}
 %    \begin{macrocode}
 %<*class>
 \def\fileauthor{Bertram Richter}
@@ -143,7 +249,7 @@ Running "make install" installs the files in the local TeX tree.
 }
 \DeclareOption{landscape}{%
     \OptionNotUsed\ClassWarning{brbrief}%
-    {Option "landscape" is not supported, , will be ignored.}%
+    {Option "landscape" is not supported, will be ignored.}%
     {}%
 }
 %    \end{macrocode}
@@ -164,18 +270,18 @@ Running "make install" installs the files in the local TeX tree.
 \ProcessOptions\relax
 \LoadClass{article}
 %    \end{macrocode}
-% Zeichenkodierung, mit open type (ermöglicht nette Ligarturen), verwende die Schriftart \verb|CormorantGaramond|
+% Zeichenkodierung, mit OpenType (ermöglicht nette Ligarturen), verwende die Schriftart \verb|CormorantGaramond| als Textschriftart sowie \verb|pifont| für Symbole.
 %    \begin{macrocode}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[OT1]{fontenc}
 \RequirePackage{CormorantGaramond}
-\RequirePackage{pifont}                % Used for symbols
+\RequirePackage{pifont}
 %    \end{macrocode}
 % Einfügen von PDFs nach dem Brief
 %    \begin{macrocode}
 \RequirePackage{pdfpages}
 %    \end{macrocode}
-% Paket für Mikro-Typographie für noch gleichmäßigeres SChriftbild
+% Paket für Mikro-Typographie für noch gleichmäßigeres Schriftbild
 %    \begin{macrocode}
 \RequirePackage{microtype}
 %    \end{macrocode}
@@ -187,6 +293,7 @@ Running "make install" installs the files in the local TeX tree.
         pdfusetitle,%
         ]{hyperref}
 %    \end{macrocode}
+% \subsection{Abmessungen und Erscheinungsbild}
 % Spezielle Abmessungen, diese sind für ein einfacheres Seitenlayout gedacht.
 %    \begin{macrocode}
 \newlength{\toprand}
@@ -229,7 +336,6 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 \setlength{\parindent}{0pt}%
 \setlength{\parskip}{1\baselineskip plus 0.2ex minus 0.2ex}%
-
 %    \end{macrocode}
 % Faltmarken
 %    \begin{macrocode}
@@ -268,11 +374,42 @@ Running "make install" installs the files in the local TeX tree.
     \renewcommand*{\@evenfoot}{\@empty}%
 }
 %    \end{macrocode}
-% Interne Befehle
+% \subsection{Speichervariablen}
+% Speichervariablen, diese enthalten auch die Standardwerte.
+% Zuerst kommen Speichervariablen für das Adressfeld, für das Absenderfeld, für die Bezugszeichenzeile und zuletzt für den Brief.
+%    \begin{macrocode}
+\newcommand*{\@ZVZiii}{}
+\newcommand*{\@ZVZii}{}
+\newcommand*{\@ZVZi}{}
+\newcommand*{\@AZFirma}{}
+\newcommand*{\@AZAnrede}{}
+\newcommand*{\@AZName}{}
+\newcommand*{\@AZStrasse}{}
+\newcommand*{\@AZPLZOrt}{}
+\newcommand*{\@AZLand}{}
+\newcommand*{\@ABSName}{}
+\newcommand*{\@ABSStrasse}{}
+\newcommand*{\@ABSPLZ}{}
+\newcommand*{\@ABSOrt}{}
+\newcommand*{\@ABSPhone}{}
+\newcommand*{\@ABSMobile}{}
+\newcommand*{\@ABSMail}{}
+\newcommand*{\@ABSInfo}{}
+\newcommand*{\@IhrSchreiben}{}
+\newcommand*{\@IhrZeichen}{}
+\newcommand*{\@KundenNummer}{} 
+\newcommand*{\@Betreff}{}
+\newcommand*{\@Briefkopf}{}
+\newcommand*{\@Briefpapier}{}
+\newcommand*{\@Signatur}{}
+%    \end{macrocode}
+% \subsection{Interne Befehle}
+% \DescribeMacro{\test}
+% Testfunktion, soll kurz sein und im Text auffallen.
 %    \begin{macrocode}
 \newcommand{\test}{\textcolor{red}{\textbf{Test}}}
-
 %    \end{macrocode}
+% \DescribeMacro{\foreverunspace}
 % Entfernt rekursiv Whitespaces von vorn und hinten.
 %    \begin{macrocode}
 \def\foreverunspace{%
@@ -288,91 +425,59 @@ Running "make install" installs the files in the local TeX tree.
         \fi%
     \fi%
 }
-
 %    \end{macrocode}
+% \DescribeMacro{\PrintIfDefined}
 % Wenn \verb|a| definiert ist und non-whitespace Elemente enthält, wird \verb|b| gedruckt, ansonsten (leer) \verb|c|.
 %    \begin{macrocode}
 \newcommand{\PrintIfDefined}[3]{%
     \setbox0=\hbox{\foreverunspace#1\foreverunspace}\ifdim\wd0=0pt#3\else{#2}\fi%
 }%
 %    \end{macrocode}
+% \DescribeMacro{\PrintOptionalField}
 % Wenn \verb|a| definiert ist und non-whitespace Elemente enthält, wird \verb|a| gedruckt und ein neuer Absatz begonnen. Ansonsten passiert nichts.
 %    \begin{macrocode}
 \newcommand{\PrintOptionalField}[1]{%
     \PrintIfDefined{#1}{#1\par}{}%
 }%
-
 %    \end{macrocode}
-% Symbole für die Kontaktdaten des Absenders
+%\DescribeMacro{\kopfbereich}
+% Dieser Befehlt setzt den Briefkopf.
+%    \begin{macrocode}
+\newcommand{\kopfbereich}{%
+	\begin{minipage}[t][\anschriftpos][t]{\textwidth}
+		\mbox{}\@Briefkopf
+	\end{minipage}
+}
+%    \end{macrocode}
+% \DescribeMacro{\Printsignature}
+% Signatur ausgeben oder Platz für manuelle Unterschrift lassen.
+%    \begin{macrocode}
+\newcommand{\PrintSignatur}[1][3.5cm]{{%
+		\def\@brempty{}%
+		\ifx\@Signatur\@brempty%
+		\par
+		\else%
+		\IfFileExists{\@Signatur}{%
+			\begin{minipage}{#1}%
+				\centering%
+				\includegraphics[width=#1]{\@Signatur}%
+			\end{minipage}\\[-8pt]%
+		}{\ClassError{\jobname}{%
+				File "\@Signatur" was not found. %
+				Did you specify the correct filename in \string\Singatur{}?}{}%
+		}%
+		\fi
+		\rule{#1}{0.5pt}\\
+		\@ABSName
+}}
+%    \end{macrocode}
+% Symbole für die Kontaktdaten des Absenders.
 %    \begin{macrocode}
 \newcommand{\phonesymbol}{\ding{37}}
 \newcommand{\mobilesymbol}{\ding{38}}
 \newcommand{\mailsymbol}{\ding{41}}
-
 %    \end{macrocode}
-% Speichervariablen, diese enthalten auch die default-Werte.
-% Zuerst Kommen Speichervariablen für das Adressfeld, für das Absenderfeld, für die Bezugszeichenzeile und zuletzt für den Brief.
-%    \begin{macrocode}
-\newcommand*{\@ZVZiii}{}                                        % Speichervariable für elektronische Freimachungsvermerke.
-\newcommand*{\@ZVZii}{}                                            % Speichervariable für Vorausfügung z.B. "Nicht Nachsenden".
-\newcommand*{\@ZVZi}{}                                            % Speichervariable für z.B. Einschreiben.
-\newcommand*{\@AZFirma}{}                                        % Speichervariable für Firma des Adressaten.
-\newcommand*{\@AZAnrede}{}                                        % Speichevariable für z.B. Berufs- oder Amtsbezeichnungen des Adressaten
-\newcommand*{\@AZName}{}                                        % Speichervariable für akademische Grade und Namen des Adressaten.
-\newcommand*{\@AZStrasse}{}                                        % Speichervariable für Straße und Hausnummer des Adressaten.
-\newcommand*{\@AZPLZOrt}{}                                        % Speichervariable für Postleitzahl und Ort des Adressaten.
-\newcommand*{\@AZLand}{}                                        % Speichervariable für das Land des Adressaten.
-\newcommand*{\@ABSName}{}                                        % Speichervariable für den Namen des Schreibenden.
-\newcommand*{\@ABSStrasse}{}                                    % Speichervariable für Straße und Hausnummer des Schreibenden.
-\newcommand*{\@ABSPLZ}{}                                        % Speichervariable für die Postleitzahldes Schreibenden.
-\newcommand*{\@ABSOrt}{}                                        % Speichervariable für den Stadtnamen des Schreibenden.
-\newcommand*{\@ABSPhone}{}                                        % Speichervariable für die Festnetznummer des Schreibenden.
-\newcommand*{\@ABSMobile}{}                                        % Speichervariable für die Handynummer des Schreibenden.
-\newcommand*{\@ABSMail}{}                                        % Speichervariable für die E-Mail-Adresse des Schreibenden.
-\newcommand*{\@ABSInfo}{}                                        % Speichervariable für die E-Mail-Adresse des Schreibenden.
-\newcommand*{\@IhrSchreiben}{}                                    % Speichervariable
-\newcommand*{\@IhrZeichen}{}                                    % Speichervariable
-\newcommand*{\@KundenNummer}{}                                    % Speichervariable
-\newcommand*{\@Betreff}{}                                        % Speichervariable für den Betreff.
-\newcommand*{\@Briefkopf}{}                                        % Speichervariable für den Briefkopf.
-\newcommand*{\@Briefpapier}{}                                    % Speichervariable für den Pfad zum Briefpapier.
-\newcommand*{\@Signature}{}                                        % Speichervariable für den Pfad zur Unterschriftsdatei.
-%    \end{macrocode}
-% Die folgenden Befehle beschreiben die zugehörigen Speichervariablen und sind für den Anwender gedacht.
-%    \begin{macrocode}
-\newcommand*{\ZViii}[1]{\renewcommand*{\@ZVZiii}{#1}}            % Legt elektronische Freimachungsvermerke fest.
-\newcommand*{\ZVii}[1]{\renewcommand*{\@ZVZii}{#1}}                % Legt Vorausfügung fest.
-\newcommand*{\ZVi}[1]{\renewcommand*{\@ZVZi}{#1}}                % Legt z.B. Einschreiben fest.
-\newcommand*{\AZFirma}[1]{\renewcommand*{\@AZFirma}{#1}}        % Legt Firma des Adressaten fest.
-\newcommand*{\AZAnrede}[1]{\renewcommand*{\@AZAnrede}{#1}}        % Legt Anrede des Adressaten fest.
-\newcommand*{\AZName}[1]{\renewcommand*{\@AZName}{#1}}            % Legt akademische Grade und Namen des Adressaten fest.
-\newcommand*{\AZStrasse}[1]{\renewcommand*{\@AZStrasse}{#1}}    % Legt Straße und Hausnummer des Adressaten fest.
-\newcommand*{\AZPLZOrt}[1]{\renewcommand*{\@AZPLZOrt}{#1}}        % Legt Postleitzahl und Ort des Adressaten fest.
-\newcommand*{\AZLand}[1]{\renewcommand*{\@AZLand}{#1}}            % Legt das Land des Adressaten fest.
-\newcommand*{\ABSName}[1]{\renewcommand*{\@ABSName}{#1}}        % Legt den den Namen des Schreibenden fest.
-\newcommand*{\ABSStrasse}[1]{\renewcommand*{\@ABSStrasse}{#1}}    % Legt Straße und Hausnummer des Schreibenden fest.
-\newcommand*{\ABSPLZ}[1]{\renewcommand*{\@ABSPLZ}{#1}}            % Legt die Postleitzahl des Schreibenden fest.
-\newcommand*{\ABSOrt}[1]{\renewcommand*{\@ABSOrt}{#1}}            % Legt den Stadtnamen des Schreibenden fest.
-\newcommand*{\ABSPhone}[1]{\renewcommand*{\@ABSPhone}{#1}}        % Legt die Festnetznummer des Schreibenden fest.
-\newcommand*{\ABSMobile}[1]{\renewcommand*{\@ABSMobile}{#1}}    % Legt die Handynummer des Schreibenden fest.
-\newcommand*{\ABSMail}[1]{\renewcommand*{\@ABSMail}{#1}}        % Legt die E-Mail-Adresse des Schreibenden fest.
-\newcommand*{\ABSInfo}[1]{\renewcommand*{\@ABSInfo}{#1}}        % Legt die E-Mail-Adresse des Schreibenden fest.
-\newcommand*{\IhrSchreiben}[1]{\renewcommand*{\@IhrSchreiben}{#1}}    % Setzt den Wert, welcher unter "Ihr Schreiben vom" kommt
-\newcommand*{\IhrZeichen}[1]{\renewcommand*{\@IhrZeichen}{#1}}        % Setzt den Wert, welcher unter "Ihr Zeichen" kommt
-\newcommand*{\KundenNummer}[1]{\renewcommand*{\@KundenNummer}{#1}}    % Setzt den Wert, welcher unter "Kundennummer" kommt
-\newcommand*{\Betreff}[1]{\renewcommand*{\@Betreff}{#1}}            % Legt den Betreff des Briefs fest.
-\newcommand*{\Briefkopf}[1]{\renewcommand*{\@Briefkopf}{#1}}        % Legt den Inhalt, des Briefkopfs fest.
-\newcommand*{\Briefpapier}[1]{\renewcommand*{\@Briefpapier}{#1}}    %  Legt den Pfad der Briefpapier fest.
-\newcommand*{\Signature}[1]{\renewcommand*{\@Signature}{#1}}        % Legt den Pfad der Unterschriftsdatei fest.
-%    \end{macrocode}
-% Dieser Befehlt setzt den Briefkopf.
-%    \begin{macrocode}
-\newcommand{\kopfbereich}{%
-    \begin{minipage}[t][\anschriftpos][t]{\textwidth}
-        \mbox{}\@Briefkopf
-    \end{minipage}
-}
-%    \end{macrocode}
+% \DescribeMacro{\PrintBriefPapier}
 % Das in \verb|\@Briefpapier| als Hintergrund für alle Seiten verwenden. Dies kann eine Bilddatei oder eine PDF sein.
 % Sofern eine PDF genutzt wird, wird jedoch nur die erste Seite verwendet.
 %    \begin{macrocode}
@@ -383,40 +488,48 @@ Running "make install" installs the files in the local TeX tree.
     \else%
     % Print background to every page
     \IfFileExists{\@Briefpapier}{%
-        \AddToHook{shipout/background}{\put (0in,-\paperheight){\includegraphics[width=\paperwidth,height=\paperheight]{\@Briefpapier}}}%
-    }%
-    {\ClassError{\jobname}{File "\@Briefpapier" was not found. Did you specify the correct path and filename in \string\Briefpapier{}?}{}}%
+        \AddToHook{shipout/background}{%
+            \put (0in,-\paperheight){%
+                \includegraphics[width=\paperwidth,height=\paperheight]{\@Briefpapier}
+            }
+        }%
+    }{\ClassError{\jobname}{%
+            File "\@Briefpapier" was not found. %
+            Did you specify the correct filename in \string\Briefpapier{}?}{}
+        }%
     \fi%
 }
 %    \end{macrocode}
-% Adressfeld
+% \DescribeMacro{\anschriftzone}
+% Adressfeld, bestehend aus der \SI{12.7}{\milli\meter} hohen Zusatz- und Vermerkzone und der \SI{27.3}{\milli\meter} hohen Anschriftzone.
 %    \begin{macrocode}
 \newcommand{\anschriftzone}{%
-    \begin{minipage}[b][45mm][c]{80mm}% [minipage outside alignment][height][aling in minipage]{width}
+    \begin{minipage}[b][45mm][c]{80mm}%
         \setlength{\parindent}{0pt}%
         \setlength{\parskip}{0pt}%
         \begin{scriptsize}%
             \PrintIfDefined{\@ABSName{}}{\@ABSName{}, }{}%
             \PrintIfDefined{\@ABSStrasse{}}{\@ABSStrasse{}, }{}%
             \PrintIfDefined{\@ABSPLZ\@ABSOrt{}}{\@ABSPLZ{}~\@ABSOrt{}}{}%
-        \end{scriptsize}% 5mm hoch
+        \end{scriptsize}%
         \\[-.8em]\rule{80mm}{0.5pt}\\%
-        \PrintOptionalField{\@ZVZiii{}}%    zusammen 12,7 mm hoch
-        \PrintOptionalField{\@ZVZii{}}%        zusammen 12,7 mm hoch
-        \PrintOptionalField{\@ZVZi{}}%        zusammen 12,7 mm hoch
-        \PrintOptionalField{\@AZFirma{}}%    zusammen 27,3 mm hoch
-        \PrintOptionalField{\@AZAnrede{}}%    zusammen 27,3 mm hoch
-        \PrintOptionalField{\@AZName{}}%    zusammen 27,3 mm hoch
-        \PrintOptionalField{\@AZStrasse{}}%    zusammen 27,3 mm hoch
-        \PrintOptionalField{\@AZPLZOrt{}}%    zusammen 27,3 mm hoch
-        \PrintOptionalField{\@AZLand{}}%    zusammen 27,3 mm hoch
-    \end{minipage}
+        \PrintOptionalField{\@ZVZiii{}}%
+        \PrintOptionalField{\@ZVZii{}}%
+        \PrintOptionalField{\@ZVZi{}}%
+        \PrintOptionalField{\@AZFirma{}}%
+        \PrintOptionalField{\@AZAnrede{}}%
+        \PrintOptionalField{\@AZName{}}%
+        \PrintOptionalField{\@AZStrasse{}}%
+        \PrintOptionalField{\@AZPLZOrt{}}%
+        \PrintOptionalField{\@AZLand{}}%
+    \end{minipage}%
 }
 %    \end{macrocode}
+% \DescribeMacro{\absenderzone}
 % Feld für Absenderinfos
 %    \begin{macrocode}
 \newcommand{\absenderzone}{%
-    \begin{minipage}[b][45mm][b]{75mm}%    % [minipage outside alignment][height][aling in minipage]{width}
+    \begin{minipage}[b][45mm][b]{75mm}%
         \setlength{\parindent}{0pt}%
         \setlength{\parskip}{0pt}%
         \begin{flushright}%
@@ -432,65 +545,75 @@ Running "make install" installs the files in the local TeX tree.
     \end{minipage}
 }
 %    \end{macrocode}
+% \DescribeMacro{\bezugszeichenzeile}
 % Bezugszeichenzeile
 %    \begin{macrocode}
 \newcommand{\bezugszeichenzeile}{%
-    \begin{minipage}[t][8.46mm][b]{\textwidth} % [minipage outside alignment][height][aling in minipage]{width}
-        \PrintIfDefined{\@IhrZeichen\@IhrSchreiben\@KundenNummer}{%        % If none of those is set, print only date
-            \PrintIfDefined{\@IhrZeichen}{%
-                \begin{minipage}{.25\textwidth}Ihr Zeichen\newline\@IhrZeichen\end{minipage}\hfill%
-            }{}%
-            \PrintIfDefined{\@IhrSchreiben}{%
-                \begin{minipage}{.25\textwidth}Ihr Schreiben vom\newline\@IhrSchreiben\end{minipage}\hfill%
-            }{}%
-            \PrintIfDefined{\@KundenNummer}{%
-                \begin{minipage}{.25\textwidth}Kundennummer\newline\@KundenNummer\end{minipage}\hfill%
-            }{}%
-            \begin{minipage}{.25\textwidth}\flushright Datum\\ \@date\end{minipage}\hfill%
-        }{%
-            {\hfill\@date}%
-        }%
-    \end{minipage}
+\begin{minipage}[t][8.46mm][b]{\textwidth}%
+    \PrintIfDefined{\@IhrZeichen\@IhrSchreiben\@KundenNummer}{%
+        \PrintIfDefined{\@IhrZeichen}{%
+            \begin{minipage}{.25\textwidth}Ihr Zeichen\newline\@IhrZeichen\end{minipage}\hfill%
+        }{}%
+        \PrintIfDefined{\@IhrSchreiben}{%
+            \begin{minipage}{.25\textwidth}Ihr Schreiben vom\newline\@IhrSchreiben\end{minipage}\hfill%
+        }{}%
+        \PrintIfDefined{\@KundenNummer}{%
+            \begin{minipage}{.25\textwidth}Kundennummer\newline\@KundenNummer\end{minipage}\hfill%
+        }{}%
+        \begin{minipage}{.25\textwidth}\flushright Datum\\ \@date\end{minipage}\hfill%
+    }{%
+        {\hfill\@date}%
+    }%
+\end{minipage}
 }
 %    \end{macrocode}
-% Typesetting commands
+% \subsection{Nutzerbefehle}
+% \subsubsection{Speicherbefehle}
+% Die folgenden Befehle belegen die zugehörigen Speichervariablen und sind für den Anwender gedacht.
+%    \begin{macrocode}
+\newcommand*{\ZViii}[1]{\renewcommand*{\@ZVZiii}{#1}}
+\newcommand*{\ZVii}[1]{\renewcommand*{\@ZVZii}{#1}}
+\newcommand*{\ZVi}[1]{\renewcommand*{\@ZVZi}{#1}}
+\newcommand*{\AZFirma}[1]{\renewcommand*{\@AZFirma}{#1}}
+\newcommand*{\AZAnrede}[1]{\renewcommand*{\@AZAnrede}{#1}}
+\newcommand*{\AZName}[1]{\renewcommand*{\@AZName}{#1}}
+\newcommand*{\AZStrasse}[1]{\renewcommand*{\@AZStrasse}{#1}}
+\newcommand*{\AZPLZOrt}[1]{\renewcommand*{\@AZPLZOrt}{#1}}
+\newcommand*{\AZLand}[1]{\renewcommand*{\@AZLand}{#1}}
+\newcommand*{\ABSName}[1]{\renewcommand*{\@ABSName}{#1}}
+\newcommand*{\ABSStrasse}[1]{\renewcommand*{\@ABSStrasse}{#1}}
+\newcommand*{\ABSPLZ}[1]{\renewcommand*{\@ABSPLZ}{#1}}
+\newcommand*{\ABSOrt}[1]{\renewcommand*{\@ABSOrt}{#1}}
+\newcommand*{\ABSPhone}[1]{\renewcommand*{\@ABSPhone}{#1}}
+\newcommand*{\ABSMobile}[1]{\renewcommand*{\@ABSMobile}{#1}}
+\newcommand*{\ABSMail}[1]{\renewcommand*{\@ABSMail}{#1}}
+\newcommand*{\ABSInfo}[1]{\renewcommand*{\@ABSInfo}{#1}}
+\newcommand*{\IhrSchreiben}[1]{\renewcommand*{\@IhrSchreiben}{#1}}
+\newcommand*{\IhrZeichen}[1]{\renewcommand*{\@IhrZeichen}{#1}}
+\newcommand*{\KundenNummer}[1]{\renewcommand*{\@KundenNummer}{#1}}
+\newcommand*{\Betreff}[1]{\renewcommand*{\@Betreff}{#1}}
+\newcommand*{\Briefkopf}[1]{\renewcommand*{\@Briefkopf}{#1}}
+\newcommand*{\Briefpapier}[1]{\renewcommand*{\@Briefpapier}{#1}}
+\newcommand*{\Signatur}[1]{\renewcommand*{\@Signatur}{#1}}
+%    \end{macrocode}
+% \subsubsection{Typesetting commands}
+% \DescribeMacro{\Anrede}
 % Anrede
 %    \begin{macrocode}
 \newcommand{\Anrede}[1]{%
     {\flushleft#1,\par}%
 }
 %    \end{macrocode}
-% Signatur
-%    \begin{macrocode}
-\newcommand{\signatur}[1][3.5cm]{%
-    {% Make prevent page braking in-between
-        \def\@brempty{}% temporary empty string
-        \ifx\@Signature\@brempty% check if empty
-        \par
-        \else%
-        \IfFileExists{\@Signature}{%
-            \begin{minipage}{#1}%
-                \centering%
-                \includegraphics[width=#1]{\@Signature}%
-            \end{minipage}\\[-8pt]%
-        }%
-        {\ClassError{\jobname}{File "\@Signature" was not found. Did you specify the correct path and filename in \string\Singature{}?}{}%
-        }%
-        \fi
-        \rule{#1}{0.5pt}\\
-        \@ABSName
-    }%
-}
-%    \end{macrocode}
+% \DescribeMacro{\Gruss}
 % Grußformel
 %    \begin{macrocode}
 \newcommand{\Gruss}[2][3.5cm]{
     \par
     #2\newline
-    \signatur[#1]{}
+    \PrintSignatur[#1]{}
 }
-
 %    \end{macrocode}
+% \DescribeMacro{\maketitle}
 % Die erste Seite setzen.
 %    \begin{macrocode}
 \renewcommand{\maketitle}{%
