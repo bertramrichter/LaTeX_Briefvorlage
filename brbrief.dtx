@@ -617,6 +617,7 @@ Running "make install" installs the files in the local TeX tree.
 % Die erste Seite setzen.
 %    \begin{macrocode}
 \renewcommand{\maketitle}{%
+    \clearpage
     \pagestyle{brief}%
     \thispagestyle{briefersteseite}%
     \kopfbereich{}%
