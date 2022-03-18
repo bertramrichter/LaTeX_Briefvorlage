@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 %<*internal>
 \def\fileauthor{Bertram Richter}
-\def\fileversion{v0.2}
+\def\fileversion{v0.3}
 \def\filedate{\today}
 \iffalse
 %</internal>
@@ -88,6 +88,8 @@ Running "make install" installs the files in the local TeX tree.
 \usepackage{microtype}
 \usepackage{siunitx}
 	\sisetup{locale=DE}
+\usepackage{verbatim}
+\usepackage{pdfpages}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -101,7 +103,7 @@ Running "make install" installs the files in the local TeX tree.
 % 
 % \DoNotIndex{\newcommand,\newenvironment}
 % \title{\textsf{\jobname} -- \LaTeX{} Briefvorlage für private Korrespondenz
-%     \thanks{Documentation für \textsf{\jobname}~\fileversion, Versionsdatum: \filedate.}}
+%     \thanks{Dokumentation für \textsf{\jobname}~\fileversion, Versionsdatum: \filedate.}}
 % \author{\fileauthor}
 % \date{\filedate}
 %
@@ -125,6 +127,9 @@ Running "make install" installs the files in the local TeX tree.
 % \DescribeMacro{foldmark/nofoldmark} Aktiviert/deaktiviert die Faltmarken. Standardmäßig sind die Faltmarken aktiviert. Die Faltmarken erscheinen auf jeder ungeraden Seite (Vorderseite).
 %
 % \DescribeMacro{punchmark/nopunchmark} Aktiviert/deaktiviert die Lochmarke. Standardmäßig ist die Lochmarke aktiviert. Die Lochmarke erscheint auf jeder ungeraden Seite (Vorderseite).
+%
+% \DescribeMacro{cormorant/nocormorant} Aktiviert/deaktiviert die Schriftart \verb|CormorantGaramont| mit entsprechenden Kodierungseinstellungen. Standardmäßig aktiviert.
+% Sofern deaktiviert, wird keinerlei Einstellung vorgenommen und der Standart der \LaTeX-Distribution genutzt.
 %
 % \section{Verfügbare Befehle}
 % \subsection{Adressfeld}
@@ -195,7 +200,7 @@ Running "make install" installs the files in the local TeX tree.
 % \DescribeMacro{\Betreff}\marg{text} Legt den Text der Betreffzeile fest, welche unter der Bezugszeichenzeile eingefügt wird.
 %
 % \subsection{Erscheinungsbild des Briefs}
-% Hier sind Befehle beschrieben, welche das das allgemeine Aussehen des Briefs beeinflussen.
+% Hier sind Befehle beschrieben, welche das allgemeine Aussehen des Briefs beeinflussen.
 %
 % \DescribeMacro{\Briefkopf}\marg{text} Legt den Inhalt des Briefkopfs (Bereich über dem Adressfeld) fest.
 % Grundsätzlich ist jeglicher \LaTeX{} Inhalt zulässig. Dieser erscheint nur auf der ersten Seite.
@@ -214,14 +219,25 @@ Running "make install" installs the files in the local TeX tree.
 % \subsection{Briefkörper}
 % Bisher wurde alles in der Präambel festgelegt. In diesem Abschnitt sind die Befehle beschrieben, welche innerhalb der \verb|document|-Umgebung verfügbar sind.
 %
-% \DescribeMacro{\maketitle} Kümmert sich um den Satz der ersten Seite.
+% \DescribeMacro{\maketitle} Setzt die erste Seite.
 % Dies ist das erste Befehl, welcher innerhalb der \verb|document|-Umgebung aufgerufen werden sollte.
 % Es wird der Briefkopf, Adressfeld, Absenderfeld, Bezugszeichen- und Betreffzeile gesetzt.
+% 
+% Durch mehrmalige Nutzung von \verb|\maketitle| ist es möglich, auch mehrere Briefe (Serienbrief) in einem einzigen Dokument zu setzen.
+% Ein neuer Brief wird immer auf einer rechten Seite begonnen.
+% Bei Option \verb|oneside| ist dies eine neue Seite, mit Option \verb|twoside| auf einer ungeraden Seite) begonnen, wenn nötig, wirde eine Leerseite eingefügt.
+% Damit sind auch mehrere zweiseitige Briefe problemlos am Stück duplex-druckbar.
+% Die sich ändernden Daten müssen entsprechend vor dem erneuten Aufruf eingestellt werden und der Breifkörper erneut erstellt werden.
 %
 % \DescribeMacro{\Anrede} \marg{Floskel} Eröffnet den Brief mit der Anrede. Am Ende wird automatisch ein Komma angehängt.
 %
-% \DescribeMacro{\Gruss} \oarg{width}\marg{Grußfloskel} Beendet den Brief mit der Grußfloskel, Unterschift und dem Namen des Absenders
+% \DescribeMacro{\Gruss} \oarg{width}\marg{Grußfloskel} Beendet den Brief mit der Grußfloskel, Unterschrift und dem Namen des Absenders.
 % Das optionale Argument \oarg{width} gibt die Breite (Standard \SI{3.5}{\centi\meter}) der Unterschrift und des Unterschriftsstrich an.
+%
+% \subsection{Beispiel}
+% Nachfolgend ist die Quelldatei und Ergebnis eines Beispielbriefs aufgeführt.
+% \verbatiminput{Brief}
+% \includepdf{Brief}
 %
 %\StopEventually{^^A
 %  \PrintChanges
@@ -231,12 +247,13 @@ Running "make install" installs the files in the local TeX tree.
 % \section{Implementation}
 % Nachfolgend ist der kommentierte Quellcode gezeigt.
 % Als normaler Endnutzer kann hier aufgehört werden, zu lesen.
+%
 % \subsection{Klassenbeginn und Optionen und benötigte Pakete}
 %    \begin{macrocode}
 %<*class>
 \def\fileauthor{Bertram Richter}
-\def\fileversion{v0.2}
-\def\filedate{2022/03/05}
+\def\fileversion{v0.3}
+\def\filedate{2022/03/18}
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{brbrief}[\filedate\space\fileversion\space Briefvorlage by \fileauthor]
 %    \end{macrocode}
@@ -253,8 +270,8 @@ Running "make install" installs the files in the local TeX tree.
     {}%
 }
 %    \end{macrocode}
-% Optionen, Faltmarken und Lochmarke anzuzeigen.
-% Standardmäßig sind beide aktiviert.
+% Optionen, für Faltmarken, Lochmarke und Schriftart.
+% Standardmäßig sind alle aktiviert.
 %    \begin{macrocode}
 \newif\if@foldmark
 \DeclareOption{foldmark}{\@foldmarktrue}
@@ -262,19 +279,24 @@ Running "make install" installs the files in the local TeX tree.
 \newif\if@punchmark
 \DeclareOption{punchmark}{\@punchmarktrue}
 \DeclareOption{nopunchmark}{\@punchmarkfalse}
+\newif\if@cormorant
+\DeclareOption{cormorant}{\@cormoranttrue}
+\DeclareOption{nocormorant}{\@cormorantfalse}
 %    \end{macrocode}
 % Default Einstellungen anwenden, und Optionen and die Elternklasse weitergeben.
 %    \begin{macrocode}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
-\ExecuteOptions{punchmark,foldmark}
+\ExecuteOptions{punchmark,foldmark,cormorant}
 \ProcessOptions\relax
 \LoadClass{article}
 %    \end{macrocode}
-% Zeichenkodierung, mit OpenType (ermöglicht nette Ligarturen), verwende die Schriftart \verb|CormorantGaramond| als Textschriftart sowie \verb|pifont| für Symbole.
+% Zeichenkodierung, mit OpenType (ermöglicht nette Ligarturen), verwende die Schriftart \verb|CormorantGaramond| als Textschriftart, wenn Option \verb|cormorant| ausgewählt ist, sowie \verb|pifont| für Symbole.
 %    \begin{macrocode}
+\if@cormorant
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[OT1]{fontenc}
 \RequirePackage{CormorantGaramond}
+\fi
 \RequirePackage{pifont}
 %    \end{macrocode}
 % Einfügen von PDFs nach dem Brief
@@ -449,7 +471,7 @@ Running "make install" installs the files in the local TeX tree.
 	\end{minipage}
 }
 %    \end{macrocode}
-% \DescribeMacro{\Printsignature}
+% \DescribeMacro{\PrintSignatur}
 % Signatur ausgeben oder Platz für manuelle Unterschrift lassen.
 %    \begin{macrocode}
 \newcommand{\PrintSignatur}[1][3.5cm]{{%
@@ -614,10 +636,20 @@ Running "make install" installs the files in the local TeX tree.
 }
 %    \end{macrocode}
 % \DescribeMacro{\maketitle}
-% Die erste Seite setzen.
+% Die erste Seite setzen. Folgendes passiert hier:
+% \begin{itemize}
+% 	\item Neue ungerade (rechte) Seite beginnen, wenn nötig, wird eine Leerseite eingefügt. Dies ist sinnvoll, um mehrere Briefe in einem Dokument hintereinander zu setzen.
+% 	\item Den Seitenanstellungen \verb|brief| für alle Seiten und \verb|briefersteseite| für die aktuelle Seite auswählen.
+% 	\item Kopfbereich setzen.
+% 	\item Anschrift- und Absenderzone nebeneinander setzen.
+% 	\item Bezugszeichenzeile und den Betreff setzen
+% 	\item PDF Metadaten werden eingestellt
+% 	\item Hintergrund (Briefpapier) einstellen
+% \end{itemize}
+% \changes{v0.3}{2022/03/18}{Fixed the new page to start on the right side with empty page, if necessary}
 %    \begin{macrocode}
 \renewcommand{\maketitle}{%
-    \clearpage
+    \clearpage{\thispagestyle{empty}\cleardoublepage}
     \pagestyle{brief}%
     \thispagestyle{briefersteseite}%
     \kopfbereich{}%

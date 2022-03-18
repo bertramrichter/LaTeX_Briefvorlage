@@ -1,4 +1,4 @@
 # Ignoriere Hilfsdateien
 *
 !*.tex
-!*cls
+!*.dtx

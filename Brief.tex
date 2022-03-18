@@ -1,13 +1,6 @@
 \documentclass[twoside]{brbrief}
-
 \usepackage{lipsum}
 \usepackage[ngerman]{babel}		% for hyphenation and date format
-
-% Development section begin
-\makeatletter
-
-\makeatother
-% Development section end
 
 % Absenderfeld
 \ABSName{Name des Absenders}
@@ -18,7 +11,6 @@
 \ABSMobile{+49~123~123456789}
 \ABSMail{absender@provider.url}
 \ABSInfo{Zusätzliche Informationen über den Absender}
-
 % Adressfeld
 \ZViii{elektronische Freimachungsvermerke}
 \ZVii{Vorausfügung}
@@ -29,13 +21,11 @@
 \AZStrasse{Zielstraße 1}
 \AZPLZOrt{12345 Zielort}
 \AZLand{Deutschland}
-
 % Betreff
 \IhrZeichen{Ihr Zeichen}
 \IhrSchreiben{01.23.4567}
 \KundenNummer{0123456789}
 \Betreff{Betreff}
-
 % Aussehen
 \Briefkopf{}
 \Briefpapier{}
@@ -50,16 +40,15 @@
 	Zu tun:
 	\begin{itemize}
 		\item Strich in Adressfeld genau so lang, wie längster Eintrag
-		\item Dokumentation für jede Option
 		\item Location Absenderinfos configurable
 	\end{itemize}
 	
-	\Gruss{Dein}
+	\Gruss{mit freundlichem Gruß}
 	
 	% Post Scriptum
 	%PS: Ich bin bis März nur telefonisch erreichbar.
 	
-	% Weitere PDFs können automatisch angefügt werden, z.B. Ahnänge.
+	% Weitere PDFs können automatisch angefügt werden, z.B. Anhänge.
 	%\includepdf[pages=-,openright]{pfad/zu/weiteren/pdfs/dokument.pdf}
 	% Pfad ist relativ zu dieser tex-Datei. Mit .. ein Verzeichnis hoch.
 	% Der pages-Parameter spezifiziert welche Seiten eingefügt werden.
@@ -71,6 +60,4 @@
 	% Der openright-Parameter startet die Anlagen auf ungerader (rechter) Seite, d.h. notfalls wird eine leere Seite
 	% eingefügt. Im doppelseitigem Druck wird dadurch besser zwischen Brief und Anlage getrennt. Für einseitigen Druck
 	% entfernen.
-	
-	
 \end{document}
