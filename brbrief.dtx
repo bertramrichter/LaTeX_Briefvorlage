@@ -363,7 +363,7 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 \newcommand{\@faltmarken}{{%
         \def\unitlength{}%
-        \begin{picture}(0mm,0mm)(0mm,-\toprand)%
+        \begin{picture}(0mm,0mm)(-5mm,-\toprand)%
         \put(-\leftrand,-105mm){\line(1,0){4mm}}%
         \put(-\leftrand,-210mm){\line(1,0){4mm}}%
         \end{picture}%
@@ -373,7 +373,7 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 \newcommand{\@lochmarke}{{%
         \def\unitlength{}%
-        \begin{picture}(0mm,0mm)(0mm,-\toprand)%
+        \begin{picture}(0mm,0mm)(-5mm,-\toprand)%
         \put(-\leftrand,-.5\paperheight){\line(1,0){4mm}}%
         \end{picture}%
 }}
@@ -658,6 +658,7 @@ Running "make install" installs the files in the local TeX tree.
     {\flushleft\textbf{\@Betreff}\setlength{\parskip}{2\baselineskip}\par}
     \hypersetup{%
         pdfsubject = {\@Betreff},%
+        pdftitle = {\@Betreff},%
         pdfauthor = {\@ABSName}%
     }%
     \PrintBriefPapier{}%
