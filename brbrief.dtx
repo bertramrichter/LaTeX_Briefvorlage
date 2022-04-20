@@ -177,6 +177,8 @@ Running "make install" installs the files in the local TeX tree.
 %
 % \DescribeMacro{\ABSMobile}\marg{text} Legt die Mobiltelefonnummer des Absenders fest.
 %
+% \DescribeMacro{\ABSFax}\marg{text} Legt die Faxnummer des Absenders fest.
+%
 % \DescribeMacro{\ABSMail}\marg{text} Legt die E-Mail-Adresse des Absenders fest.
 %
 % \DescribeMacro{\ABSInfo}\marg{text} Legt eventuell benötigte zusätzliche Informationen über den Absender fest.
@@ -414,6 +416,7 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand*{\@ABSPLZ}{}
 \newcommand*{\@ABSOrt}{}
 \newcommand*{\@ABSPhone}{}
+\newcommand*{\@ABSFax}{}
 \newcommand*{\@ABSMobile}{}
 \newcommand*{\@ABSMail}{}
 \newcommand*{\@ABSInfo}{}
@@ -561,6 +564,7 @@ Running "make install" installs the files in the local TeX tree.
             %\PrintOptionalField{\@ABSPLZ{}~\@ABSOrt{}}%
             \PrintIfDefined{\@ABSPhone{}}{\phonesymbol{} \@ABSPhone{}\par}{}%
             \PrintIfDefined{\@ABSMobile{}}{\mobilesymbol{} \@ABSMobile{}\par}{}%
+            \PrintIfDefined{\@ABSFax{}}{Fax: \@ABSFax{}\par}{}%
             \PrintIfDefined{\@ABSMail{}}{\mailsymbol{} \href{mailto:\@ABSMail}{\@ABSMail}\par}{}%
             \PrintOptionalField{\@ABSInfo{}}%
         \end{flushright}
@@ -608,6 +612,7 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand*{\ABSOrt}[1]{\renewcommand*{\@ABSOrt}{#1}}
 \newcommand*{\ABSPhone}[1]{\renewcommand*{\@ABSPhone}{#1}}
 \newcommand*{\ABSMobile}[1]{\renewcommand*{\@ABSMobile}{#1}}
+\newcommand*{\ABSFax}[1]{\renewcommand*{\@ABSFax}{#1}}
 \newcommand*{\ABSMail}[1]{\renewcommand*{\@ABSMail}{#1}}
 \newcommand*{\ABSInfo}[1]{\renewcommand*{\@ABSInfo}{#1}}
 \newcommand*{\IhrSchreiben}[1]{\renewcommand*{\@IhrSchreiben}{#1}}
