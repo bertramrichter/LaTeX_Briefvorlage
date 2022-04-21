@@ -113,7 +113,7 @@ Running "make install" installs the files in the local TeX tree.
 %     \noindent
 %     Dieses Dokument beschreibt \textsf{\jobname}.
 %     Mit \textsf{\jobname} können DIN~5008-konforme Briefe relativ unkompliziert verfasst und gesetzt werden.
-%     Gedacht ist sie zur Nutzung as Briefvorlage für den privaten Schriftverkehr.
+%     Gedacht ist sie zur Nutzung als Briefvorlage für den privaten Schriftverkehr.
 %     Entwickelt, um den Ansprüchen des Autors von Stil und Einfachheit zu genügen.
 % \end{abstract}
 %
@@ -127,9 +127,6 @@ Running "make install" installs the files in the local TeX tree.
 % \DescribeMacro{foldmark/nofoldmark} Aktiviert/deaktiviert die Faltmarken. Standardmäßig sind die Faltmarken aktiviert. Die Faltmarken erscheinen auf jeder ungeraden Seite (Vorderseite).
 %
 % \DescribeMacro{punchmark/nopunchmark} Aktiviert/deaktiviert die Lochmarke. Standardmäßig ist die Lochmarke aktiviert. Die Lochmarke erscheint auf jeder ungeraden Seite (Vorderseite).
-%
-% \DescribeMacro{cormorant/nocormorant} Aktiviert/deaktiviert die Schriftart \verb|CormorantGaramont| mit entsprechenden Kodierungseinstellungen. Standardmäßig aktiviert.
-% Sofern deaktiviert, wird keinerlei Einstellung vorgenommen und der Standart der \LaTeX-Distribution genutzt.
 %
 % \section{Verfügbare Befehle}
 % \subsection{Adressfeld}
@@ -298,29 +295,21 @@ Running "make install" installs the files in the local TeX tree.
 \newif\if@punchmark
 \DeclareOption{punchmark}{\@punchmarktrue}
 \DeclareOption{nopunchmark}{\@punchmarkfalse}
-\newif\if@cormorant
-\DeclareOption{cormorant}{\@cormoranttrue}
-\DeclareOption{nocormorant}{\@cormorantfalse}
 %    \end{macrocode}
 % Default Einstellungen anwenden, und Optionen and die Elternklasse weitergeben.
 %    \begin{macrocode}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
-\ExecuteOptions{punchmark,foldmark,cormorant}
+\ExecuteOptions{punchmark,foldmark}
 \ProcessOptions\relax
 \LoadClass{article}
 %    \end{macrocode}
-% Zeichenkodierung, mit OpenType (ermöglicht nette Ligarturen), verwende die Schriftart \verb|CormorantGaramond| als Textschriftart, wenn Option \verb|cormorant| ausgewählt ist, sowie \verb|pifont| für Symbole.
+% Zeichenkodierung, mit OpenType (ermöglicht nette Ligarturen), verwende die Schriftart \verb|pifont| für Symbole.
 %    \begin{macrocode}
-\if@cormorant
-\RequirePackage[utf8]{inputenc}
-\RequirePackage[OT1]{fontenc}
-\RequirePackage{CormorantGaramond}
-\fi
 \RequirePackage{pifont}
 %    \end{macrocode}
 % Einstellungen für Papier und Ränder
 %    \begin{macrocode}
-\RequirePackage[a4paper, portrait]{geometry}
+\RequirePackage[a4paper, portrait, nohead, includefoot]{geometry}
 %    \end{macrocode}
 % Einfügen von PDFs nach dem Brief
 %    \begin{macrocode}
@@ -350,15 +339,14 @@ Running "make install" installs the files in the local TeX tree.
 \setlength{\bmargin}{20mm}%
 \setlength{\lmargin}{25mm}%
 \setlength{\rmargin}{20mm}%
+\setlength{\footskip}{2\baselineskip}%
 %    \end{macrocode}
 % Am Begin des Dokuments werden die Abmessungseinstellungen angewendet und in \LaTeX{}-interne Befehle geschrieben.
 %    \begin{macrocode}
 \AtBeginDocument{
     \setlength{\anschriftpos}{45mm}%
     \addtolength{\anschriftpos}{-\tmargin}%
-    \setlength{\footskip}{2\baselineskip}%
     \newgeometry{%
-        nohead,%
         lmargin=\lmargin,%
         rmargin=\rmargin,%
         tmargin=\tmargin,%
@@ -654,6 +642,7 @@ Running "make install" installs the files in the local TeX tree.
 % Die erste Seite setzen. Folgendes passiert hier:
 % \begin{itemize}
 % 	\item Neue ungerade (rechte) Seite beginnen, wenn nötig, wird eine Leerseite eingefügt. Dies ist sinnvoll, um mehrere Briefe in einem Dokument hintereinander zu setzen.
+% 	\item Die Seitenzahl wird auf 1 zurückgesetzt.
 % 	\item Den Seitenanstellungen \verb|brief| für alle Seiten und \verb|briefersteseite| für die aktuelle Seite auswählen.
 % 	\item Kopfbereich setzen.
 % 	\item Anschrift- und Absenderzone nebeneinander setzen.
@@ -664,13 +653,14 @@ Running "make install" installs the files in the local TeX tree.
 % \changes{v0.3}{2022/03/18}{Fixed the new page to start on the right side with empty page, if necessary}
 %    \begin{macrocode}
 \renewcommand{\maketitle}{%
-    \clearpage{\thispagestyle{empty}\cleardoublepage}
+    \clearpage{\thispagestyle{empty}\cleardoublepage}%
+    \setcounter{page}{1}%
     \pagestyle{brief}%
     \thispagestyle{briefersteseite}%
     \kopfbereich{}%
     \begin{minipage}[t]{\textwidth}\anschriftzone\hfill\absenderzone\end{minipage}\\%
     \bezugszeichenzeile{}%
-    {\flushleft\textbf{\@Betreff}\setlength{\parskip}{2\baselineskip}\par}
+    {\flushleft\textbf{\@Betreff}\setlength{\parskip}{2\baselineskip}\par}%
     \hypersetup{%
         pdfsubject = {\@Betreff},%
         pdftitle = {\@Betreff},%

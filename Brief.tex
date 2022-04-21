@@ -1,6 +1,9 @@
 \documentclass[twoside]{brbrief}
-\usepackage{lipsum}
+\usepackage{lipsum}				% Lorem-ipsum-Text-Generator
 \usepackage[ngerman]{babel}		% for hyphenation and date format
+\usepackage[utf8]{inputenc}		% 
+\usepackage[OT1]{fontenc}		% Intelligente Ligaturen
+\usepackage{CormorantGaramond}	% schicke Schrift
 
 % Absenderfeld
 \ABSName{Name des Absenders}
@@ -36,16 +39,13 @@
 	\maketitle{}
 	\Anrede{Liebe(r) Adressat(in)}
 	
-	\lipsum[1-20]
+	\lipsum[1-10]
 	
 	Zu tun:
 	\begin{itemize}
 		\item Strich in Adressfeld genau so lang, wie längster Eintrag
 		\item Location Absenderinfos configurable
-		\item Randeinstellungen konfigurabel und dokumentieren
 		\item Sämtliches Styling in eine separate Datei (muss dem Nutzer nicht aufgezwungen werden)
-		\item Sämtliche Funktionalität in ein Paket $\to$ nutzbar in anderen Dokumenten, mehrere Briefe in einem Dokument
-		\item Klasse als dünnen Wrapper mit Standardeinstellungen um dieses Paket, stellt Pakete ein mit sonst nix
 		\item Briefpapier konfigurabel: Erste Seite, Rechte Seite, Linke Seite
 	\end{itemize}
 	
