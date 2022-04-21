@@ -218,6 +218,23 @@ Running "make install" installs the files in the local TeX tree.
 % Sofern eine PDF genutzt wird, wird jedoch nur die erste Seite verwendet.
 % Sofern keine Datei spezifiziert ist, wird entsprechend Platz für eine händische Unterschrift gelassen.
 %
+% \subsubsection{Einstellbare Längen}
+% Die nachfolgend beschriebenen Längen (Standardwert in Klammern) können mit \verb|\setlength{<lengthname>}{<Länge>}| in der Präambel abgeändert werden:
+%
+% \DescribeMacro{\tmargin} (\SI{20}{\milli\meter}) Oberer Rand. Wert muss \(\leq \SI{45}{mm}\) sein, anderenfalls verrutscht das Anschriftfeld.
+%
+% \DescribeMacro{\bmargin} (\SI{20}{\milli\meter}) Unterer Rand. Enthält nicht die Fußzeile!
+%
+% \DescribeMacro{\lmargin} (\SI{25}{\milli\meter}) Linker~-- in doppelseitigem Satz innnerer~-- Rand.
+%
+% \DescribeMacro{\bmargin} (\SI{20}{\milli\meter}) Rechter~-- in doppelseitigem Satz äußerer~-- Rand.
+%
+% Der Textkörper ist mit den folgenden Werten gesetzt:
+%
+% \DescribeMacro{\parindent} (\SI{0}{\milli\meter}) Einzu der ersten Zeile eines Absatzes.
+%
+% \DescribeMacro{\parskip} (\(\SI{1}{baselineskip} \pm \SI{0.2}{ex}\)) Abstand zwischen zwei Absätzen. Dies entspricht einer Leerzeile mit einer Flexibilität von \(\frac{1}{5}\) der Höhe des Buchstaben \enquote{x}.
+%
 % \subsection{Briefkörper}
 % Bisher wurde alles in der Präambel festgelegt. In diesem Abschnitt sind die Befehle beschrieben, welche innerhalb der \verb|document|-Umgebung verfügbar sind.
 %
@@ -301,6 +318,10 @@ Running "make install" installs the files in the local TeX tree.
 \fi
 \RequirePackage{pifont}
 %    \end{macrocode}
+% Einstellungen für Papier und Ränder
+%    \begin{macrocode}
+\RequirePackage[a4paper, portrait]{geometry}
+%    \end{macrocode}
 % Einfügen von PDFs nach dem Brief
 %    \begin{macrocode}
 \RequirePackage{pdfpages}
@@ -320,41 +341,30 @@ Running "make install" installs the files in the local TeX tree.
 % \subsection{Abmessungen und Erscheinungsbild}
 % Spezielle Abmessungen, diese sind für ein einfacheres Seitenlayout gedacht.
 %    \begin{macrocode}
-\newlength{\toprand}
-\newlength{\botrand}
-\newlength{\leftrand}
-\newlength{\rightrand}
-\setlength{\toprand}{20mm}
-\setlength{\botrand}{20mm}
-\setlength{\leftrand}{25mm}
-\setlength{\rightrand}{20mm}
-\newlength{\anschriftpos}
-\setlength{\anschriftpos}{45mm}
-\addtolength{\anschriftpos}{-\toprand}
+\newlength{\tmargin}%
+\newlength{\bmargin}%
+\newlength{\lmargin}%
+\newlength{\rmargin}%
+\newlength{\anschriftpos}%
+\setlength{\tmargin}{20mm}%
+\setlength{\bmargin}{20mm}%
+\setlength{\lmargin}{25mm}%
+\setlength{\rmargin}{20mm}%
 %    \end{macrocode}
-% Nachfolgend werden die Abmessungseinstellungen angewendet und in \LaTeX{}-interne Befehle geschrieben.
+% Am Begin des Dokuments werden die Abmessungseinstellungen angewendet und in \LaTeX{}-interne Befehle geschrieben.
 %    \begin{macrocode}
-\setlength{\paperheight}{297mm}
-\setlength{\paperwidth}{210mm}
-\setlength{\voffset}{0pt}
-\setlength{\topmargin}{\toprand}
-\addtolength{\topmargin}{-1in}
-\setlength{\headheight}{0mm}
-\setlength{\headsep}{0mm}
-\setlength{\topskip}{0mm}
-\setlength{\footskip}{2\baselineskip}
-\setlength{\hoffset}{0pt}
-\setlength{\oddsidemargin}{\leftrand}
-\setlength{\evensidemargin}{\rightrand}
-\addtolength{\oddsidemargin}{-1in}
-\addtolength{\evensidemargin}{-1in}
-\setlength{\textwidth}{\paperwidth}
-\addtolength{\textwidth}{-\leftrand}
-\addtolength{\textwidth}{-\rightrand}
-\setlength{\textheight}{\paperheight}
-\addtolength{\textheight}{-\toprand}
-\addtolength{\textheight}{-\botrand}
-\addtolength{\textheight}{-\footskip}
+\AtBeginDocument{
+    \setlength{\anschriftpos}{45mm}%
+    \addtolength{\anschriftpos}{-\tmargin}%
+    \setlength{\footskip}{2\baselineskip}%
+    \newgeometry{%
+        nohead,%
+        lmargin=\lmargin,%
+        rmargin=\rmargin,%
+        tmargin=\tmargin,%
+        bmargin=\bmargin,%
+    }%
+}
 %    \end{macrocode}
 % Absatzseinstellungen für Briefe laut DIN~5008: Kein Einzug, eine Leerzeile.
 %    \begin{macrocode}
@@ -365,9 +375,9 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 \newcommand{\@faltmarken}{{%
         \def\unitlength{}%
-        \begin{picture}(0mm,0mm)(-5mm,-\toprand)%
-        \put(-\leftrand,-105mm){\line(1,0){4mm}}%
-        \put(-\leftrand,-210mm){\line(1,0){4mm}}%
+        \begin{picture}(0mm,0mm)(-5mm,-\tmargin)%
+        \put(-\lmargin,-105mm){\line(1,0){4mm}}%
+        \put(-\lmargin,-210mm){\line(1,0){4mm}}%
         \end{picture}%
 }}
 %    \end{macrocode}
@@ -375,8 +385,8 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 \newcommand{\@lochmarke}{{%
         \def\unitlength{}%
-        \begin{picture}(0mm,0mm)(-5mm,-\toprand)%
-        \put(-\leftrand,-.5\paperheight){\line(1,0){4mm}}%
+        \begin{picture}(0mm,0mm)(-5mm,-\tmargin)%
+        \put(-\lmargin,-.5\paperheight){\line(1,0){4mm}}%
         \end{picture}%
 }}
 %    \end{macrocode}
