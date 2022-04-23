@@ -158,15 +158,15 @@ Running "make install" installs the files in the local TeX tree.
 % Die Reihenfolge der Einträge im Brief entspricht der Reihenfolge der nachfolgend aufgeführten Befehle.
 % Nicht belegte (leer gelassene) Einträge werden ausgelassen und erzeugen keine Leerzeile.
 %
-% \DescribeMacro{\ABSName}\marg{text} Legt Straße und Hausnummer des Absenders fest.
-% Dieser dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld, im Absenderfeld sowie und der Schlussfloskel unter der Unterschrift.
+% \DescribeMacro{\ABSName}\marg{text} Legt den Namen des Absenders fest.
+% Dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld, im Absenderfeld sowie und der Schlussfloskel unter der Unterschrift.
 % Zusätzlich wird er als Autor den Metadaten der erzeugten PDF hinzugefügt.
 %
-% \DescribeMacro{\ABSStrasse}\marg{text} Legt den Namen des Absenders fest.
-% Dieser dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld und im Absenderfeld.
+% \DescribeMacro{\ABSStrasse}\marg{text} Legt Straße und Hausnummer des Absenders fest.
+% Dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld und im Absenderfeld.
 %
 % \DescribeMacro{\ABSPLZ}\marg{text} Legt die Postleitzahl des Absenders fest.
-% Dieser dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld und im Absenderfeld.
+% Dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld und im Absenderfeld.
 %
 % \DescribeMacro{\ABSOrt}\marg{text} Legt den Ort des Absenders fest.
 %
@@ -177,6 +177,8 @@ Running "make install" installs the files in the local TeX tree.
 % \DescribeMacro{\ABSFax}\marg{text} Legt die Faxnummer des Absenders fest.
 %
 % \DescribeMacro{\ABSMail}\marg{text} Legt die E-Mail-Adresse des Absenders fest.
+%
+% \DescribeMacro{\ABSWeb}\marg{text} Legt den Web-Auftritt (Homepage) des Absenders fest.
 %
 % \DescribeMacro{\ABSInfo}\marg{text} Legt eventuell benötigte zusätzliche Informationen über den Absender fest.
 % Sofern diese aus mehreren Zeilen mit manuellen Umbrüchen bestehen, sind Zeilen mit \verb|\par| umzubrechen. Leerzeilen entsprechend mit \verb|~\par| einfügen.
@@ -417,6 +419,7 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand*{\@ABSFax}{}
 \newcommand*{\@ABSMobile}{}
 \newcommand*{\@ABSMail}{}
+\newcommand*{\@ABSWeb}{}
 \newcommand*{\@ABSInfo}{}
 \newcommand*{\@IhrSchreiben}{}
 \newcommand*{\@IhrZeichen}{}
@@ -467,10 +470,25 @@ Running "make install" installs the files in the local TeX tree.
     \PrintIfDefined{#1}{#1\par}{}%
 }%
 %    \end{macrocode}
-%\DescribeMacro{\kopfbereich}
+% \DescribeMacro{\PrintGraphic}\marg{size}\marg{filename}
+% Dieses Macro untersucht, die \marg{filename} eine existierende Datei ist. Sofern erfolgreich, wird diese mit \verb|\includegraphics[size]{filename}| geladen. Anderenfalls wird ein Fehler ausgegeben.
+%    \begin{macrocode}
+\newcommand{\PrintGraphic}[2]{{%
+        \def\@brempty{}%
+        \ifx#2\@brempty%
+        \else%
+        \IfFileExists{#2}{%
+            \includegraphics[#1]{#2}%
+        }{\ClassError{\jobname}{%
+                File "#2" was not found. %
+                Did you specify the correct filename in \string#2?}{}%
+        }%
+        \fi
+}}%
+%\DescribeMacro{\PrintKopfbereich}
 % Dieser Befehlt setzt den Briefkopf.
 %    \begin{macrocode}
-\newcommand{\kopfbereich}{%
+\newcommand{\PrintKopfbereich}{%
     \begin{minipage}[t][\anschriftpos][t]{\textwidth}
         \mbox{}\@Briefkopf
     \end{minipage}
@@ -527,10 +545,10 @@ Running "make install" installs the files in the local TeX tree.
     \fi%
 }
 %    \end{macrocode}
-% \DescribeMacro{\anschriftzone}
+% \DescribeMacro{\PrintAnschriftzone}
 % Adressfeld, bestehend aus der \SI{12.7}{\milli\meter} hohen Zusatz- und Vermerkzone und der \SI{27.3}{\milli\meter} hohen Anschriftzone.
 %    \begin{macrocode}
-\newcommand{\anschriftzone}{%
+\newcommand{\PrintAnschriftzone}{%
     \begin{minipage}[b][45mm][c]{80mm}%
         \setlength{\parindent}{0pt}%
         \setlength{\parskip}{0pt}%
@@ -552,10 +570,10 @@ Running "make install" installs the files in the local TeX tree.
     \end{minipage}%
 }
 %    \end{macrocode}
-% \DescribeMacro{\absenderzone}
+% \DescribeMacro{\PrintAbsenderzone}
 % Feld für Absenderinfos
 %    \begin{macrocode}
-\newcommand{\absenderzone}{%
+\newcommand{\PrintAbsenderzone}{%
     \begin{minipage}[b][45mm][b]{75mm}%
         \setlength{\parindent}{0pt}%
         \setlength{\parskip}{0pt}%
@@ -568,15 +586,16 @@ Running "make install" installs the files in the local TeX tree.
             \PrintIfDefined{\@ABSMobile{}}{\mobilesymbol{} \@ABSMobile{}\par}{}%
             \PrintIfDefined{\@ABSFax{}}{Fax: \@ABSFax{}\par}{}%
             \PrintIfDefined{\@ABSMail{}}{\mailsymbol{} \href{mailto:\@ABSMail}{\@ABSMail}\par}{}%
+            \PrintIfDefined{\@ABSWeb{}}{Web: \href{\@ABSWeb}{\@ABSWeb}\par}{}%
             \PrintOptionalField{\@ABSInfo{}}%
         \end{flushright}
     \end{minipage}
 }
 %    \end{macrocode}
-% \DescribeMacro{\bezugszeichenzeile}
+% \DescribeMacro{\PrintBezugszeichenzeile}
 % Bezugszeichenzeile
 %    \begin{macrocode}
-\newcommand{\bezugszeichenzeile}{%
+\newcommand{\PrintBezugszeichenzeile}{%
 \begin{minipage}[t][8.46mm][b]{\textwidth}%
     \PrintIfDefined{\@IhrZeichen\@IhrSchreiben\@KundenNummer}{%
         \PrintIfDefined{\@IhrZeichen}{%
@@ -616,6 +635,7 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand*{\ABSMobile}[1]{\renewcommand*{\@ABSMobile}{#1}}
 \newcommand*{\ABSFax}[1]{\renewcommand*{\@ABSFax}{#1}}
 \newcommand*{\ABSMail}[1]{\renewcommand*{\@ABSMail}{#1}}
+\newcommand*{\ABSWeb}[1]{\renewcommand*{\@ABSweb}{#1}}
 \newcommand*{\ABSInfo}[1]{\renewcommand*{\@ABSInfo}{#1}}
 \newcommand*{\IhrSchreiben}[1]{\renewcommand*{\@IhrSchreiben}{#1}}
 \newcommand*{\IhrZeichen}[1]{\renewcommand*{\@IhrZeichen}{#1}}
@@ -661,9 +681,9 @@ Running "make install" installs the files in the local TeX tree.
     \setcounter{page}{1}%
     \pagestyle{brief}%
     \thispagestyle{briefersteseite}%
-    \kopfbereich{}%
-    \begin{minipage}[t]{\textwidth}\anschriftzone\hfill\absenderzone\end{minipage}\\%
-    \bezugszeichenzeile{}%
+    \PrintKopfbereich{}%
+    \begin{minipage}[t]{\textwidth}\PrintAnschriftzone\hfill\PrintAbsenderzone\end{minipage}\\%
+    \PrintBezugszeichenzeile{}%
     {\flushleft\textbf{\@Betreff}\setlength{\parskip}{2\baselineskip}\par}%
     \hypersetup{%
         pdfsubject = {\@Betreff},%
