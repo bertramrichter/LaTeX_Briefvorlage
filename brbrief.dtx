@@ -298,10 +298,16 @@ Running "make install" installs the files in the local TeX tree.
 \DeclareOption{punchmark}{\@punchmarktrue}
 \DeclareOption{nopunchmark}{\@punchmarkfalse}
 %    \end{macrocode}
+% Option für Version A (hochgestelltes Anschriftfeld) oder Version B (tiefgestelltes Anschriftfeld)
+%    \begin{macrocode}
+\newif\if@versionA
+\DeclareOption{A}{\@versionAtrue}
+\DeclareOption{B}{\@versionAfalse}
+%    \end{macrocode}
 % Default Einstellungen anwenden, und Optionen and die Elternklasse weitergeben.
 %    \begin{macrocode}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
-\ExecuteOptions{punchmark,foldmark}
+\ExecuteOptions{punchmark,foldmark, B}
 \ProcessOptions\relax
 \LoadClass{article}
 %    \end{macrocode}
@@ -336,18 +342,52 @@ Running "make install" installs the files in the local TeX tree.
 \newlength{\bmargin}%
 \newlength{\lmargin}%
 \newlength{\rmargin}%
-\newlength{\anschriftpos}%
+\newlength{\anschriftvpos}%
+\newlength{\anschrifthpos}%
+\newlength{\anschriftheight}%
+\newlength{\anschriftwidth}%
+\newlength{\informationvpos}%
+\newlength{\informationhpos}%
+\newlength{\informationwidth}%
+\newlength{\faltmarkevtop}%
+\newlength{\faltmarkevbot}%
+\newlength{\faltmarkelength}%
+\newlength{\lochmarkelength}%
+\newlength{\titlesep}%
+\newlength{\footsep}%
+
 \setlength{\tmargin}{20mm}%
 \setlength{\bmargin}{20mm}%
 \setlength{\lmargin}{25mm}%
 \setlength{\rmargin}{20mm}%
-\setlength{\footskip}{2\baselineskip}%
+\setlength{\footsep}{4.23mm}%
+\setlength{\anschrifthpos}{25mm}%
+\setlength{\anschriftheight}{45mm}%
+\setlength{\anschriftwidth}{80mm}%
+\setlength{\informationhpos}{125mm}%
+\setlength{\informationwidth}{75mm}%
+\setlength{\titlesep}{8.46mm}%
+\setlength{\faltmarkelength}{4mm}%
+\setlength{\lochmarkelength}{4mm}%
+%    \end{macrocode}
+% Unterschiedliche Längendefinitionen von Version~A und Version~B setzen.
+%    \begin{macrocode}
+\if@versionA
+    \setlength{\anschriftvpos}{27mm}%
+    \setlength{\informationvpos}{32mm}%
+    \setlength{\faltmarkevtop}{87mm}%
+    \setlength{\faltmarkevbot}{192mm}%
+\else
+    \setlength{\anschriftvpos}{45mm}%
+    \setlength{\informationvpos}{50mm}%
+    \setlength{\faltmarkevtop}{105mm}%
+    \setlength{\faltmarkevbot}{210mm}%
+\fi
 %    \end{macrocode}
 % Am Begin des Dokuments werden die Abmessungseinstellungen angewendet und in \LaTeX{}-interne Befehle geschrieben.
 %    \begin{macrocode}
 \AtBeginDocument{
-    \setlength{\anschriftpos}{45mm}%
-    \addtolength{\anschriftpos}{-\tmargin}%
+    \addtolength{\anschriftvpos}{-\tmargin}%
     \newgeometry{%
         lmargin=\lmargin,%
         rmargin=\rmargin,%
@@ -356,18 +396,13 @@ Running "make install" installs the files in the local TeX tree.
     }%
 }
 %    \end{macrocode}
-% Absatzseinstellungen für Briefe laut DIN~5008: Kein Einzug, eine Leerzeile.
-%    \begin{macrocode}
-\setlength{\parindent}{0pt}%
-\setlength{\parskip}{1\baselineskip plus 0.2ex minus 0.2ex}%
-%    \end{macrocode}
 % Faltmarken
 %    \begin{macrocode}
 \newcommand{\@faltmarken}{{%
         \def\unitlength{}%
         \begin{picture}(0mm,0mm)(-5mm,-\tmargin)%
-        \put(-\lmargin,-105mm){\line(1,0){4mm}}%
-        \put(-\lmargin,-210mm){\line(1,0){4mm}}%
+        \put(-\lmargin,-\faltmarkevtop){\line(1,0){\faltmarkelength}}%
+        \put(-\lmargin,-\faltmarkevbot){\line(1,0){\faltmarkelength}}%
         \end{picture}%
 }}
 %    \end{macrocode}
@@ -376,7 +411,7 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand{\@lochmarke}{{%
         \def\unitlength{}%
         \begin{picture}(0mm,0mm)(-5mm,-\tmargin)%
-        \put(-\lmargin,-.5\paperheight){\line(1,0){4mm}}%
+        \put(-\lmargin,-.5\paperheight){\line(1,0){\lochmarkelength}}%
         \end{picture}%
 }}
 %    \end{macrocode}
@@ -385,8 +420,8 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand{\ps@brief}{%
     \renewcommand{\@oddhead}{\if@foldmark\@faltmarken\fi\if@punchmark\@lochmarke\fi}
     \renewcommand{\@evenhead}{\@empty}
-    \renewcommand*{\@oddfoot}{\hfill{}Seite\:\thepage{}}%
-    \renewcommand*{\@evenfoot}{Seite\:\thepage\hfill{}}%
+    \renewcommand{\@oddfoot}{\hfill{}Seite\:\thepage{}}%
+    \renewcommand{\@evenfoot}{Seite\:\thepage\hfill{}}%
 }
 %    \end{macrocode}
 % Page style für die erste Seite:
@@ -394,38 +429,27 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand{\ps@briefersteseite}{%
     \renewcommand{\@oddhead}{\if@foldmark\@faltmarken\fi\if@punchmark\@lochmarke\fi}
     \renewcommand{\@evenhead}{\@empty}
-    \renewcommand*{\@oddfoot}{\@empty}%
-    \renewcommand*{\@evenfoot}{\@empty}%
+    \renewcommand{\@oddfoot}{\hfill{}Seite\:\thepage{}}%
+    \renewcommand{\@evenfoot}{\@empty}%
 }
 %    \end{macrocode}
 % \subsection{Speichervariablen}
 % Speichervariablen, diese enthalten auch die Standardwerte.
 % Zuerst kommen Speichervariablen für das Adressfeld, für das Absenderfeld, für die Bezugszeichenzeile und zuletzt für den Brief.
 %    \begin{macrocode}
-\newcommand*{\@ZVZiii}{}
-\newcommand*{\@ZVZii}{}
-\newcommand*{\@ZVZi}{}
-\newcommand*{\@AZFirma}{}
-\newcommand*{\@AZAnrede}{}
-\newcommand*{\@AZName}{}
-\newcommand*{\@AZStrasse}{}
-\newcommand*{\@AZPLZOrt}{}
-\newcommand*{\@AZLand}{}
-\newcommand*{\@ABSName}{}
-\newcommand*{\@ABSStrasse}{}
-\newcommand*{\@ABSPLZ}{}
-\newcommand*{\@ABSOrt}{}
-\newcommand*{\@ABSPhone}{}
-\newcommand*{\@ABSFax}{}
-\newcommand*{\@ABSMobile}{}
-\newcommand*{\@ABSMail}{}
-\newcommand*{\@ABSWeb}{}
-\newcommand*{\@ABSInfo}{}
-\newcommand*{\@IhrSchreiben}{}
-\newcommand*{\@IhrZeichen}{}
-\newcommand*{\@KundenNummer}{} 
-\newcommand*{\@Betreff}{}
-\newcommand*{\@Briefkopf}{}
+\newcommand{\@Vermerkzone}{}
+\newcommand{\@Anschriftzone}{}
+\newcommand{\@Informationsblock}{}
+\newcommand{\@ABSPhone}{}
+\newcommand{\@ABSFax}{}
+\newcommand{\@ABSMobile}{}
+\newcommand{\@ABSMail}{}
+\newcommand{\@ABSWeb}{}
+\newcommand{\@Betreff}{}
+\newcommand{\@Header}{}
+\newcommand{\@Footer}{}
+\newcommand{\@Firstfooter}{\@empty}
+\newcommand{\@Briefkopf}{\@empty}
 \newcommand*{\@Briefpapier}{}
 \newcommand*{\@Signatur}{}
 %    \end{macrocode}
@@ -489,7 +513,7 @@ Running "make install" installs the files in the local TeX tree.
 % Dieser Befehlt setzt den Briefkopf.
 %    \begin{macrocode}
 \newcommand{\PrintKopfbereich}{%
-    \begin{minipage}[t][\anschriftpos][t]{\textwidth}
+    \begin{minipage}[t][\anschriftvpos][t]{\textwidth}
         \mbox{}\@Briefkopf
     \end{minipage}
 }
@@ -497,7 +521,7 @@ Running "make install" installs the files in the local TeX tree.
 % \DescribeMacro{\PrintSignatur}
 % Signatur ausgeben oder Platz für manuelle Unterschrift lassen.
 %    \begin{macrocode}
-\newcommand{\PrintSignatur}[1][3.5cm]{{%
+\newcommand{\PrintSignatur}[2][3.5cm]{{%
         \def\@brempty{}%
         \ifx\@Signatur\@brempty%
         \par
@@ -513,7 +537,7 @@ Running "make install" installs the files in the local TeX tree.
         }%
         \fi
         \rule{#1}{0.5pt}\\
-        \@ABSName
+        #2
 }}
 %    \end{macrocode}
 % Symbole für die Kontaktdaten des Absenders.
@@ -549,102 +573,54 @@ Running "make install" installs the files in the local TeX tree.
 % Adressfeld, bestehend aus der \SI{12.7}{\milli\meter} hohen Zusatz- und Vermerkzone und der \SI{27.3}{\milli\meter} hohen Anschriftzone.
 %    \begin{macrocode}
 \newcommand{\PrintAnschriftzone}{%
-    \begin{minipage}[b][45mm][c]{80mm}%
+    \begin{minipage}[t][\anschriftheight][c]{\anschriftwidth}%
         \setlength{\parindent}{0pt}%
         \setlength{\parskip}{0pt}%
-        \begin{scriptsize}%
-            \PrintIfDefined{\@ABSName{}}{\@ABSName{}, }{}%
-            \PrintIfDefined{\@ABSStrasse{}}{\@ABSStrasse{}, }{}%
-            \PrintIfDefined{\@ABSPLZ\@ABSOrt{}}{\@ABSPLZ{}~\@ABSOrt{}}{}%
-        \end{scriptsize}%
+        {\@Vermerkzone{}}%
         \\[-.8em]\rule{80mm}{0.5pt}\\%
-        \PrintOptionalField{\@ZVZiii{}}%
-        \PrintOptionalField{\@ZVZii{}}%
-        \PrintOptionalField{\@ZVZi{}}%
-        \PrintOptionalField{\@AZFirma{}}%
-        \PrintOptionalField{\@AZAnrede{}}%
-        \PrintOptionalField{\@AZName{}}%
-        \PrintOptionalField{\@AZStrasse{}}%
-        \PrintOptionalField{\@AZPLZOrt{}}%
-        \PrintOptionalField{\@AZLand{}}%
+        {\@Anschriftzone{}}%
     \end{minipage}%
 }
 %    \end{macrocode}
-% \DescribeMacro{\PrintAbsenderzone}
+% \DescribeMacro{\PrintInformationsblock}
 % Feld für Absenderinfos
 %    \begin{macrocode}
-\newcommand{\PrintAbsenderzone}{%
-    \begin{minipage}[b][45mm][b]{75mm}%
+\newcommand{\PrintInformationsblock}{%
+    \begin{minipage}[t][][t]{\informationwidth}%
+        \vspace{5mm}
         \setlength{\parindent}{0pt}%
         \setlength{\parskip}{0pt}%
         \begin{flushright}%
-            \PrintOptionalField{\@ABSName{}}%
-            \PrintOptionalField{\@ABSStrasse{}}%
-            \PrintIfDefined{\@ABSPLZ{}\@ABSOrt{}}{\@ABSPLZ{}~\@ABSOrt{}\par}{}
-            %\PrintOptionalField{\@ABSPLZ{}~\@ABSOrt{}}%
-            \PrintIfDefined{\@ABSPhone{}}{\phonesymbol{} \@ABSPhone{}\par}{}%
-            \PrintIfDefined{\@ABSMobile{}}{\mobilesymbol{} \@ABSMobile{}\par}{}%
-            \PrintIfDefined{\@ABSFax{}}{Fax: \@ABSFax{}\par}{}%
-            \PrintIfDefined{\@ABSMail{}}{\mailsymbol{} \href{mailto:\@ABSMail}{\@ABSMail}\par}{}%
-            \PrintIfDefined{\@ABSWeb{}}{Web: \href{\@ABSWeb}{\@ABSWeb}\par}{}%
-            \PrintOptionalField{\@ABSInfo{}}%
+            \@Informationsblock
         \end{flushright}
     \end{minipage}
-}
-%    \end{macrocode}
-% \DescribeMacro{\PrintBezugszeichenzeile}
-% Bezugszeichenzeile
-%    \begin{macrocode}
-\newcommand{\PrintBezugszeichenzeile}{%
-\begin{minipage}[t][8.46mm][b]{\textwidth}%
-    \PrintIfDefined{\@IhrZeichen\@IhrSchreiben\@KundenNummer}{%
-        \PrintIfDefined{\@IhrZeichen}{%
-            \begin{minipage}{.25\textwidth}Ihr Zeichen\newline\@IhrZeichen\end{minipage}\hfill%
-        }{}%
-        \PrintIfDefined{\@IhrSchreiben}{%
-            \begin{minipage}{.25\textwidth}Ihr Schreiben vom\newline\@IhrSchreiben\end{minipage}\hfill%
-        }{}%
-        \PrintIfDefined{\@KundenNummer}{%
-            \begin{minipage}{.25\textwidth}Kundennummer\newline\@KundenNummer\end{minipage}\hfill%
-        }{}%
-        \begin{minipage}{.25\textwidth}\flushright Datum\\ \@date\end{minipage}\hfill%
-    }{%
-        {\hfill\@date}%
-    }%
-\end{minipage}
 }
 %    \end{macrocode}
 % \subsection{Nutzerbefehle}
 % \subsubsection{Speicherbefehle}
 % Die folgenden Befehle belegen die zugehörigen Speichervariablen und sind für den Anwender gedacht.
 %    \begin{macrocode}
-\newcommand*{\ZViii}[1]{\renewcommand*{\@ZVZiii}{#1}}
-\newcommand*{\ZVii}[1]{\renewcommand*{\@ZVZii}{#1}}
-\newcommand*{\ZVi}[1]{\renewcommand*{\@ZVZi}{#1}}
-\newcommand*{\AZFirma}[1]{\renewcommand*{\@AZFirma}{#1}}
-\newcommand*{\AZAnrede}[1]{\renewcommand*{\@AZAnrede}{#1}}
-\newcommand*{\AZName}[1]{\renewcommand*{\@AZName}{#1}}
-\newcommand*{\AZStrasse}[1]{\renewcommand*{\@AZStrasse}{#1}}
-\newcommand*{\AZPLZOrt}[1]{\renewcommand*{\@AZPLZOrt}{#1}}
-\newcommand*{\AZLand}[1]{\renewcommand*{\@AZLand}{#1}}
-\newcommand*{\ABSName}[1]{\renewcommand*{\@ABSName}{#1}}
-\newcommand*{\ABSStrasse}[1]{\renewcommand*{\@ABSStrasse}{#1}}
-\newcommand*{\ABSPLZ}[1]{\renewcommand*{\@ABSPLZ}{#1}}
-\newcommand*{\ABSOrt}[1]{\renewcommand*{\@ABSOrt}{#1}}
-\newcommand*{\ABSPhone}[1]{\renewcommand*{\@ABSPhone}{#1}}
-\newcommand*{\ABSMobile}[1]{\renewcommand*{\@ABSMobile}{#1}}
-\newcommand*{\ABSFax}[1]{\renewcommand*{\@ABSFax}{#1}}
-\newcommand*{\ABSMail}[1]{\renewcommand*{\@ABSMail}{#1}}
-\newcommand*{\ABSWeb}[1]{\renewcommand*{\@ABSweb}{#1}}
-\newcommand*{\ABSInfo}[1]{\renewcommand*{\@ABSInfo}{#1}}
-\newcommand*{\IhrSchreiben}[1]{\renewcommand*{\@IhrSchreiben}{#1}}
-\newcommand*{\IhrZeichen}[1]{\renewcommand*{\@IhrZeichen}{#1}}
-\newcommand*{\KundenNummer}[1]{\renewcommand*{\@KundenNummer}{#1}}
-\newcommand*{\Betreff}[1]{\renewcommand*{\@Betreff}{#1}}
-\newcommand*{\Briefkopf}[1]{\renewcommand*{\@Briefkopf}{#1}}
+\newcommand{\Vermerkzone}[1]{\renewcommand{\@Vermerkzone}{#1}}
+\newcommand{\Anschriftzone}[1]{\renewcommand{\@Anschriftzone}{#1}}
+\newcommand{\Informationsblock}[1]{\renewcommand{\@Informationsblock}{#1}}
+\newcommand{\ABSPhone}[1]{\renewcommand{\@ABSPhone}{#1}}
+\newcommand{\ABSMobile}[1]{\renewcommand{\@ABSMobile}{#1}}
+\newcommand{\ABSFax}[1]{\renewcommand{\@ABSFax}{#1}}
+\newcommand{\ABSMail}[1]{\renewcommand{\@ABSMail}{#1}}
+\newcommand{\ABSWeb}[1]{\renewcommand{\@ABSweb}{#1}}
+\newcommand{\Betreff}[1]{\renewcommand{\@Betreff}{#1}}
+\newcommand{\Briefkopf}[1]{\renewcommand{\@Briefkopf}{#1}}
+\newcommand{\Header}[1]{\renewcommand{\@Header}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
+\newcommand{\Firstheader}[1]{\renewcommand{\@Firstheader}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
+\newcommand{\Footer}[1]{\renewcommand{\@Footer}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
+\newcommand{\Firstfooter}[1]{\renewcommand{\@Firstfooter}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
 \newcommand*{\Briefpapier}[1]{\renewcommand*{\@Briefpapier}{#1}}
 \newcommand*{\Signatur}[1]{\renewcommand*{\@Signatur}{#1}}
 %    \end{macrocode}
+% \subsubsection{Fußzeilen}
+% Die Erste Seite hat eine eigene Fußzeile
+%    \begin{macrocode}
+
 % \subsubsection{Typesetting commands}
 % \DescribeMacro{\Anrede}
 % Anrede
@@ -656,10 +632,10 @@ Running "make install" installs the files in the local TeX tree.
 % \DescribeMacro{\Gruss}
 % Grußformel
 %    \begin{macrocode}
-\newcommand{\Gruss}[2][3.5cm]{
+\newcommand{\Gruss}[3][3.5cm]{
     \par
     #2\newline
-    \PrintSignatur[#1]{}
+    \PrintSignatur[#1]{#3}
 }
 %    \end{macrocode}
 % \DescribeMacro{\maketitle}
@@ -678,17 +654,22 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 \renewcommand{\maketitle}{%
     \clearpage{\thispagestyle{empty}\cleardoublepage}%
+    \setlength{\parskip}{0pt}
     \setcounter{page}{1}%
     \pagestyle{brief}%
     \thispagestyle{briefersteseite}%
     \PrintKopfbereich{}%
-    \begin{minipage}[t]{\textwidth}\PrintAnschriftzone\hfill\PrintAbsenderzone\end{minipage}\\%
-    \PrintBezugszeichenzeile{}%
-    {\flushleft\textbf{\@Betreff}\setlength{\parskip}{2\baselineskip}\par}%
+    \begin{minipage}[t]{\textwidth}%
+        \begin{minipage}[t]{\textwidth}\PrintAnschriftzone\hfill\PrintInformationsblock\end{minipage}%
+        \vspace{\titlesep}%
+    \end{minipage}
+    {\flushleft\textbf{\@Betreff}\vspace{\baselineskip}}%
+    \setlength{\parindent}{0pt}%
+    \setlength{\parskip}{1\baselineskip plus 0.2ex minus 0.2ex}%
     \hypersetup{%
         pdfsubject = {\@Betreff},%
         pdftitle = {\@Betreff},%
-        pdfauthor = {\@ABSName}%
+        pdfauthor = {\@author}%
     }%
     \PrintBriefPapier{}%
 }
