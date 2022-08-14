@@ -1,41 +1,52 @@
-\documentclass[twoside]{brbrief}
+\documentclass[twoside, A]{brbrief}
 \usepackage{lipsum}				% Lorem-ipsum-Text-Generator
 \usepackage[ngerman]{babel}		% for hyphenation and date format
 \usepackage[utf8]{inputenc}		% 
 \usepackage[OT1]{fontenc}		% Intelligente Ligaturen
 \usepackage{CormorantGaramond}	% schicke Schrift
+\usepackage{pdfpages}
 
 % Absenderfeld
-\ABSName{Name des Absenders}
-\ABSStrasse{Absenderstraße 1}
-\ABSPLZ{01234}
-\ABSOrt{Absenderort}
-\ABSPhone{+49~123~123456789}
-\ABSMobile{+49~123~123456789}
-\ABSFax{+49~123~123456789}
-\ABSMail{absender@provider.url}
-\ABSInfo{Zusätzliche Informationen über den Absender}
+\Informationsblock{
+	\flushright
+	Ihr Zeichen: 123456 \\
+	Ihr Schreiben vom 1234-56-78\\
+	Kundennummer: 0123456789 \\
+	~\\
+	Name des Absenders \\
+	Absenderstraße 1 \\
+	01234 Absenderort \\
+	~\\
+	\phonesymbol{} Tel: +49~123~123456789 \\
+	\mobilesymbol{} Mobil: +49~123~123456789 \\
+	\mailsymbol{} Email: \href{mailto:absender@provider.url}{absender@provider.url} \\
+	~\\
+	
+	Zusätzliche Infos zum Absender
+	}
 % Adressfeld
-\ZViii{elektronische Freimachungsvermerke}
-\ZVii{Vorausfügung}
-\ZVi{z.\,B.\ Einschreiben}
-\AZFirma{Firma}
-\AZAnrede{Frau/Herr}
-\AZName{Name des Addressaten}
-\AZStrasse{Zielstraße 1}
-\AZPLZOrt{12345 Zielort}
-\AZLand{Deutschland}
+\Vermerkzone{%
+	elektronische Freimachungsvermerke \\
+	Vorausfügung \\
+	z.\,B.\@ Einschreiben \\
+	Name des Absenders, Absenderstraße 1, 01234 Absenderort%
+	}
+\Anschriftzone{%
+	Firma \\
+	Frau\slash{}Herr \\
+	Name des Adressaten \\
+	Zielstraße 1 \\
+	12345 Zielort \\
+	Deutschland \\
+	}
 % Betreff
-\IhrZeichen{Ihr Zeichen}
-\IhrSchreiben{01.23.4567}
-\KundenNummer{0123456789}
 \Betreff{Betreff}
 % Aussehen
 \Briefkopf{}
-\Briefpapier{}
 \Signatur{Unterschrift.png}
 
 \begin{document}
+	
 	\maketitle{}
 	\Anrede{Liebe(r) Adressat(in)}
 	
@@ -48,7 +59,7 @@
 		\item Briefpapier konfigurabel: Erste Seite, Rechte Seite, Linke Seite
 	\end{itemize}
 	
-	\Gruss{mit freundlichem Gruß}
+	\Gruss{mit freundlichem Gruß}{Absendername}
 	
 	% Post Scriptum
 	%PS: Ich bin bis März nur telefonisch erreichbar.

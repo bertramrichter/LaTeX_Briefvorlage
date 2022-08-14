@@ -319,10 +319,6 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 \RequirePackage[a4paper, portrait, nohead, includefoot]{geometry}
 %    \end{macrocode}
-% Einfügen von PDFs nach dem Brief
-%    \begin{macrocode}
-\RequirePackage{pdfpages}
-%    \end{macrocode}
 % Paket für Mikro-Typographie für noch gleichmäßigeres Schriftbild
 %    \begin{macrocode}
 \RequirePackage{microtype}
@@ -352,7 +348,9 @@ Running "make install" installs the files in the local TeX tree.
 \newlength{\faltmarkevtop}%
 \newlength{\faltmarkevbot}%
 \newlength{\faltmarkelength}%
+\newlength{\faltmarkemargin}%
 \newlength{\lochmarkelength}%
+\newlength{\lochmarkemargin}%
 \newlength{\titlesep}%
 \newlength{\footsep}%
 
@@ -368,7 +366,9 @@ Running "make install" installs the files in the local TeX tree.
 \setlength{\informationwidth}{75mm}%
 \setlength{\titlesep}{8.46mm}%
 \setlength{\faltmarkelength}{4mm}%
+\setlength{\faltmarkemargin}{5mm}%
 \setlength{\lochmarkelength}{4mm}%
+\setlength{\lochmarkemargin}{5mm}%
 %    \end{macrocode}
 % Unterschiedliche Längendefinitionen von Version~A und Version~B setzen.
 %    \begin{macrocode}
@@ -393,6 +393,7 @@ Running "make install" installs the files in the local TeX tree.
         rmargin=\rmargin,%
         tmargin=\tmargin,%
         bmargin=\bmargin,%
+        includefoot
     }%
 }
 %    \end{macrocode}
@@ -400,7 +401,7 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 \newcommand{\@faltmarken}{{%
         \def\unitlength{}%
-        \begin{picture}(0mm,0mm)(-5mm,-\tmargin)%
+        \begin{picture}(0mm,0mm)(-\faltmarkemargin,-\tmargin)%
         \put(-\lmargin,-\faltmarkevtop){\line(1,0){\faltmarkelength}}%
         \put(-\lmargin,-\faltmarkevbot){\line(1,0){\faltmarkelength}}%
         \end{picture}%
@@ -410,7 +411,7 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 \newcommand{\@lochmarke}{{%
         \def\unitlength{}%
-        \begin{picture}(0mm,0mm)(-5mm,-\tmargin)%
+        \begin{picture}(0mm,0mm)(-\lochmarkemargin,-\tmargin)%
         \put(-\lmargin,-.5\paperheight){\line(1,0){\lochmarkelength}}%
         \end{picture}%
 }}
@@ -440,17 +441,11 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand{\@Vermerkzone}{}
 \newcommand{\@Anschriftzone}{}
 \newcommand{\@Informationsblock}{}
-\newcommand{\@ABSPhone}{}
-\newcommand{\@ABSFax}{}
-\newcommand{\@ABSMobile}{}
-\newcommand{\@ABSMail}{}
-\newcommand{\@ABSWeb}{}
 \newcommand{\@Betreff}{}
 \newcommand{\@Header}{}
 \newcommand{\@Footer}{}
 \newcommand{\@Firstfooter}{\@empty}
 \newcommand{\@Briefkopf}{\@empty}
-\newcommand*{\@Briefpapier}{}
 \newcommand*{\@Signatur}{}
 %    \end{macrocode}
 % \subsection{Interne Befehle}
@@ -546,29 +541,6 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand{\mobilesymbol}{\ding{38}}
 \newcommand{\mailsymbol}{\ding{41}}
 %    \end{macrocode}
-% \DescribeMacro{\PrintBriefPapier}
-% Das in \verb|\@Briefpapier| als Hintergrund für alle Seiten verwenden. Dies kann eine Bilddatei oder eine PDF sein.
-% Sofern eine PDF genutzt wird, wird jedoch nur die erste Seite verwendet.
-%    \begin{macrocode}
-\newcommand{\PrintBriefPapier}{%
-    \def\@brempty{}% temporary empty string
-    \ifx\@Briefpapier\@brempty% check if empty
-    % do nothing, -> no background
-    \else%
-    % Print background to every page
-    \IfFileExists{\@Briefpapier}{%
-        \AddToHook{shipout/background}{%
-            \put (0in,-\paperheight){%
-                \includegraphics[width=\paperwidth,height=\paperheight]{\@Briefpapier}
-            }
-        }%
-    }{\ClassError{\jobname}{%
-            File "\@Briefpapier" was not found. %
-            Did you specify the correct filename in \string\Briefpapier{}?}{}
-        }%
-    \fi%
-}
-%    \end{macrocode}
 % \DescribeMacro{\PrintAnschriftzone}
 % Adressfeld, bestehend aus der \SI{12.7}{\milli\meter} hohen Zusatz- und Vermerkzone und der \SI{27.3}{\milli\meter} hohen Anschriftzone.
 %    \begin{macrocode}
@@ -590,9 +562,7 @@ Running "make install" installs the files in the local TeX tree.
         \vspace{5mm}
         \setlength{\parindent}{0pt}%
         \setlength{\parskip}{0pt}%
-        \begin{flushright}%
-            \@Informationsblock
-        \end{flushright}
+        \@Informationsblock
     \end{minipage}
 }
 %    \end{macrocode}
@@ -603,18 +573,12 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand{\Vermerkzone}[1]{\renewcommand{\@Vermerkzone}{#1}}
 \newcommand{\Anschriftzone}[1]{\renewcommand{\@Anschriftzone}{#1}}
 \newcommand{\Informationsblock}[1]{\renewcommand{\@Informationsblock}{#1}}
-\newcommand{\ABSPhone}[1]{\renewcommand{\@ABSPhone}{#1}}
-\newcommand{\ABSMobile}[1]{\renewcommand{\@ABSMobile}{#1}}
-\newcommand{\ABSFax}[1]{\renewcommand{\@ABSFax}{#1}}
-\newcommand{\ABSMail}[1]{\renewcommand{\@ABSMail}{#1}}
-\newcommand{\ABSWeb}[1]{\renewcommand{\@ABSweb}{#1}}
 \newcommand{\Betreff}[1]{\renewcommand{\@Betreff}{#1}}
 \newcommand{\Briefkopf}[1]{\renewcommand{\@Briefkopf}{#1}}
 \newcommand{\Header}[1]{\renewcommand{\@Header}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
 \newcommand{\Firstheader}[1]{\renewcommand{\@Firstheader}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
 \newcommand{\Footer}[1]{\renewcommand{\@Footer}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
 \newcommand{\Firstfooter}[1]{\renewcommand{\@Firstfooter}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
-\newcommand*{\Briefpapier}[1]{\renewcommand*{\@Briefpapier}{#1}}
 \newcommand*{\Signatur}[1]{\renewcommand*{\@Signatur}{#1}}
 %    \end{macrocode}
 % \subsubsection{Fußzeilen}
@@ -649,7 +613,7 @@ Running "make install" installs the files in the local TeX tree.
 % 	\item Bezugszeichenzeile und den Betreff setzen
 % 	\item PDF Metadaten werden eingestellt
 % 	\item Hintergrund (Briefpapier) einstellen
-% \end{itemize}
+% 	\end{itemize}
 % \changes{v0.3}{2022/03/18}{Fixed the new page to start on the right side with empty page, if necessary}
 %    \begin{macrocode}
 \renewcommand{\maketitle}{%
@@ -671,7 +635,6 @@ Running "make install" installs the files in the local TeX tree.
         pdftitle = {\@Betreff},%
         pdfauthor = {\@author}%
     }%
-    \PrintBriefPapier{}%
 }
 \endinput
 %</class>
