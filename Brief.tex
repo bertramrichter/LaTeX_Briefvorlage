@@ -1,10 +1,11 @@
 \documentclass[twoside, A]{brbrief}
-\usepackage{lipsum}				% Lorem-ipsum-Text-Generator
 \usepackage[ngerman]{babel}		% for hyphenation and date format
 \usepackage[utf8]{inputenc}		% 
 \usepackage[OT1]{fontenc}		% Intelligente Ligaturen
 \usepackage{CormorantGaramond}	% schicke Schrift
-\usepackage{pdfpages}
+\usepackage{pdfpages}			% PDF-Dateien einfügen
+\usepackage[useregional]{datetime2}			% Daten formatieren
+\usepackage{lipsum}				% Lorem-ipsum-Text-Generator
 
 % Absenderfeld
 \Informationsblock{
@@ -19,17 +20,18 @@
 	~\\
 	\phonesymbol{} Tel: +49~123~123456789 \\
 	\mobilesymbol{} Mobil: +49~123~123456789 \\
-	\mailsymbol{} Email: \href{mailto:absender@provider.url}{absender@provider.url} \\
+	\mailsymbol{} Email: \href{mailto:abc@abs.url}{abc@abc.url} \\
 	~\\
-	
-	Zusätzliche Infos zum Absender
+	Zusätzliche Infos zum Absender \\
+	~\\
+	\DTMtoday{}
 	}
 % Adressfeld
 \Vermerkzone{%
 	elektronische Freimachungsvermerke \\
 	Vorausfügung \\
 	z.\,B.\@ Einschreiben \\
-	Name des Absenders, Absenderstraße 1, 01234 Absenderort%
+	{Name des Absenders, Absenderstraße 1, 01234 Absenderort}
 	}
 \Anschriftzone{%
 	Firma \\
@@ -39,25 +41,14 @@
 	12345 Zielort \\
 	Deutschland \\
 	}
-% Betreff
 \Betreff{Betreff}
-% Aussehen
-\Briefkopf{}
 \Signatur{Unterschrift.png}
 
 \begin{document}
-	
 	\maketitle{}
 	\Anrede{Liebe(r) Adressat(in)}
 	
-	\lipsum[1-10]
-	
-	Zu tun:
-	\begin{itemize}
-		\item Strich in Adressfeld genau so lang, wie längster Eintrag
-		\item Location Absenderinfos configurable
-		\item Briefpapier konfigurabel: Erste Seite, Rechte Seite, Linke Seite
-	\end{itemize}
+	\lipsum[1-3]
 	
 	\Gruss{mit freundlichem Gruß}{Absendername}
 	
@@ -73,7 +64,8 @@
 	% pages={1-4}			Seite 1-4
 	% pages={1,4,5}			Seite 1, 4 und 5
 	% pages={3,{},8-11,15}	Seite 3, leere Seite, Seite 8-11 und Seite 15
-	% Der openright-Parameter startet die Anlagen auf ungerader (rechter) Seite, d.h. notfalls wird eine leere Seite
-	% eingefügt. Im doppelseitigem Druck wird dadurch besser zwischen Brief und Anlage getrennt. Für einseitigen Druck
-	% entfernen.
+	% Der openright-Parameter startet die Anlagen auf ungerader (rechter)
+	% Seite, d. h. notfalls wird eine leere Seite eingefügt.
+	% Im doppelseitigem Druck wird dadurch besser zwischen Brief und Anlage
+	% getrennt. Für einseitigen Druck entfernen.
 \end{document}

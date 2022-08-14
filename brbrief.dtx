@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 %<*internal>
 \def\fileauthor{Bertram Richter}
-\def\fileversion{v0.3}
+\def\fileversion{v0.4}
 \def\filedate{\today}
 \iffalse
 %</internal>
@@ -122,135 +122,97 @@ Running "make install" installs the files in the local TeX tree.
 % Grundsätzlich werden (fast) alle in \verb|article| verfügbaren Optionen unterstützt.
 % Jedoch ist das Papierformat auf A4 im Hochformat beschränkt.
 %
-% \DescribeMacro{oneside/twoside} Legt fest, ob die Brief einseitig oder zweiseitig gesetzt werden soll. Diese Option wird direkt and die Elternklasse \verb|article| weitergeben.
+% \DescribeMacro{oneside\slash{}twoside} Legt fest, ob der Brief einseitig oder zweiseitig gesetzt werden soll.
+% Diese Option wird direkt and die Elternklasse \verb|article| weitergeben.
+% Im einseitigen Druck ist jede Seite ein \enquote{rechte} Seite.
 %
-% \DescribeMacro{foldmark/nofoldmark} Aktiviert/deaktiviert die Faltmarken. Standardmäßig sind die Faltmarken aktiviert. Die Faltmarken erscheinen auf jeder ungeraden Seite (Vorderseite).
+% \DescribeMacro{foldmark\slash{}nofoldmark} Aktiviert/deaktiviert die Faltmarken.
+% Standardmäßig sind die Faltmarken aktiviert. Die Faltmarken erscheinen auf jeder rechten Seite (Vorderseite).
 %
-% \DescribeMacro{punchmark/nopunchmark} Aktiviert/deaktiviert die Lochmarke. Standardmäßig ist die Lochmarke aktiviert. Die Lochmarke erscheint auf jeder ungeraden Seite (Vorderseite).
+% \DescribeMacro{punchmark\slash{}nopunchmark} Aktiviert/deaktiviert die Lochmarke.
+% Standardmäßig ist die Lochmarke aktiviert. Die Lochmarke erscheint auf jeder rechten Seite (Vorderseite).
+%
+% \DescribeMacro{A\slash{}B} Version A mit hochgestelltem Anschriftfeld oder Version B tiefgestelltem Anschriftfeld.
+% Standardmäßig ist \verb|A| ausgewählt, da damit mehr Platz für auf der Ersten Seite ist.
 %
 % \section{Verfügbare Befehle}
-% \subsection{Adressfeld}
-% Das Adressfeld wird mit den folgenden Einträgen gefüllt.
-% Durch einen Strich getrennt erscheinen Name und Anschrift des Absenders in einer Zeile über dem eigentlichen Adressfeld.
-% Die Reihenfolge der Einträge im Brief entspricht der Reihenfolge der nachfolgend aufgeführten Befehle.
-% Nicht belegte (leer gelassene) Einträge werden ausgelassen, ohne Leerzeile zu erzeugen.
-%
-% \DescribeMacro{\ZVZiii}\marg{text} Legt eventuelle elektronische Freimachungsvermerke fest.
-%
-% \DescribeMacro{\ZVZii}\marg{text} Legt eine eventuelle Vorausfügung fest.
-%
-% \DescribeMacro{\ZVZi}\marg{text} Legt z.\,B.\ \enquote{Einschreiben} fest.
-%
-% \DescribeMacro{\AZFirma}\marg{text} Legt den Firmennamen des Empfänger fest.
-%
-% \DescribeMacro{\AZAnrede}\marg{text} Legt die Anrede des Empfänger fest z.\,B.\ \enquote{Herr}.
-%
-% \DescribeMacro{\AZName}\marg{text} Legt eventuelle akademische Grade und den Namen des Empfänger fest.
-%
-% \DescribeMacro{\AZStrasse}\marg{text} Legt Straße und Hausnummer des Empfänger fest.
-%
-% \DescribeMacro{\AZPLZOrt}\marg{text} Legt die Postleitzahl und den Ort des Empfänger fest.
-%
-% \DescribeMacro{\AZLand}\marg{text} Legt das Land des Empfänger fest.
-%
-% \subsection{Absenderfeld}
-% Das Absenderfeld erscheint rechts neben dem Adressfeld.
-% Die Reihenfolge der Einträge im Brief entspricht der Reihenfolge der nachfolgend aufgeführten Befehle.
-% Nicht belegte (leer gelassene) Einträge werden ausgelassen und erzeugen keine Leerzeile.
-%
-% \DescribeMacro{\ABSName}\marg{text} Legt den Namen des Absenders fest.
-% Dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld, im Absenderfeld sowie und der Schlussfloskel unter der Unterschrift.
-% Zusätzlich wird er als Autor den Metadaten der erzeugten PDF hinzugefügt.
-%
-% \DescribeMacro{\ABSStrasse}\marg{text} Legt Straße und Hausnummer des Absenders fest.
-% Dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld und im Absenderfeld.
-%
-% \DescribeMacro{\ABSPLZ}\marg{text} Legt die Postleitzahl des Absenders fest.
-% Dieser Eintrag erscheint an mehreren Stellen im Dokument: in der Absenderzeile im Adressfeld und im Absenderfeld.
-%
-% \DescribeMacro{\ABSOrt}\marg{text} Legt den Ort des Absenders fest.
-%
-% \DescribeMacro{\ABSPhone}\marg{text} Legt die Festnetznummer des Absenders fest.
-%
-% \DescribeMacro{\ABSMobile}\marg{text} Legt die Mobiltelefonnummer des Absenders fest.
-%
-% \DescribeMacro{\ABSFax}\marg{text} Legt die Faxnummer des Absenders fest.
-%
-% \DescribeMacro{\ABSMail}\marg{text} Legt die E-Mail-Adresse des Absenders fest.
-%
-% \DescribeMacro{\ABSWeb}\marg{text} Legt den Web-Auftritt (Homepage) des Absenders fest.
-%
-% \DescribeMacro{\ABSInfo}\marg{text} Legt eventuell benötigte zusätzliche Informationen über den Absender fest.
-% Sofern diese aus mehreren Zeilen mit manuellen Umbrüchen bestehen, sind Zeilen mit \verb|\par| umzubrechen. Leerzeilen entsprechend mit \verb|~\par| einfügen.
-%
-% \subsection{Bezugszeichenzeile und Betreff}
-% Die Bezugszeichenzeile wird unterhalb des Adressfelds und des Absenderfelds eingefügt.
-% Die Reihenfolge der Einträge im Brief entspricht der Reihenfolge der nachfolgend aufgeführten Befehle.
-% Nicht belegte (leer gelassene) Einträge werden ausgelassen.
-% Sofern keine folgenden Einträge besetzt ist, wird die Bezugszeichenzeile einzeilig ausgeführt und enthält nur das Datum auf der rechten Seite.
-%
-% \DescribeMacro{\IhrZeichen}\marg{text} Legt das Bezugszeichen fest, welches sich auf den Adressaten bezieht.
-% Sofern gesetzt, wird es mit \enquote{Ihr Zeichen} überschrieben.
-%
-% \DescribeMacro{\IhrSchreiben}\marg{text} Legt das Bezugszeichen fest, welches sich auf das beantwortete Schreiben bezieht.
-% Sofern gesetzt, wird es mit \enquote{Ihr Schreiben vom} überschrieben.
-%
-% \DescribeMacro{\KundenNummer}\marg{text} Legt das die Kundennummer des Schreibenden fest.
-% Sofern gesetzt, wird es mit \enquote{Kundennummer} überschrieben.
-%
-% \DescribeMacro{\Betreff}\marg{text} Legt den Text der Betreffzeile fest, welche unter der Bezugszeichenzeile eingefügt wird.
-%
-% \subsection{Erscheinungsbild des Briefs}
-% Hier sind Befehle beschrieben, welche das allgemeine Aussehen des Briefs beeinflussen.
-%
+% \subsection{Für den Briefkopf benötigt}
 % \DescribeMacro{\Briefkopf}\marg{text} Legt den Inhalt des Briefkopfs (Bereich über dem Adressfeld) fest.
 % Grundsätzlich ist jeglicher \LaTeX{} Inhalt zulässig. Dieser erscheint nur auf der ersten Seite.
 % Zu beachten ist, dass der Bereich des Briefkopfs nicht nach unten beschränkt ist.
-% Somit kann Inhalt auch bis in das Adressfeld andere Bereiche laufen.
+% Somit kann Inhalt auch bis in das Adressfeld und andere Bereiche laufen.
 %
-% \DescribeMacro{\Briefpapier}\marg{Dateiname} Legt die Datei fest, welche als Briefpapier (Hintergrund für alle Seiten) verwendet werden soll.
-% Möglich ist eine Bilddatei (PNG, JPG) oder eine PDF.
-% Sofern eine PDF genutzt wird, wird jedoch nur die erste Seite verwendet.
+% Das Adressfeld besteht aus den beiden Feldern \verb|Vermerkzone| und \verb|Anschriftzone|, welche durch einen Strich getrennt werden.
+% Beide Felder teilen sich den Verfügbaren Platz und werden im Sichtfenster des Briefes in der Höhe zentriert.
 %
+% \DescribeMacro{\Vermerkzone}\marg{text} Diese enhält Informationen zur Sendung und in der untersten Zeile die Rücksendeangabe in \SI{8}{pt} in serifenloser Schrift.
+%
+% \DescribeMacro{\Anschriftzone}\marg{text} Diese enhält Zustellinformationen wie Empfänger und Adresse. Ein Gliederungsvorschlag kann dem Beispiel entnommen werden.
+%
+% \DescribeMacro{\Informationsblock}\marg{text} Der Informationsblock erscheint rechts neben dem Adressfeld und enthält Bezugszeichen, Kommunikationsangaben und Informationen zum Absender.
+% Grundsätzlich liegt die Gestalung beim Nutzer. Ein Gliederungsvorschlag kann dem Beispiel entnommen werden.
+%
+% \DescribeMacro{\Betreff}\marg{text} Legt den Text der Betreffzeile fest, welche vor dem Briefkörper eingefügt wird. Der Betreff wird auch als Titel der PDF gesetzt.
+%
+% \subsection{Briefkörper}
+% Die bisher beschriebenen Befehle werden zur Speicherung der Inhalte für die unterschiedlichen Felder der ersten Seite genutzt.
+% Nun folgen Befehle, welche für den Textsatz verwendet werden.
+%
+% \DescribeMacro{\maketitle} Setzt die erste Seite.
+% Dies ist das erste Befehl, welcher innerhalb der \verb|document|-Umgebung aufgerufen werden sollte.
+% Es wird der Briefkopf, Adressfeld, Informationsblock und Betreffzeile gesetzt.
+% 
+% Durch mehrmalige Nutzung von \verb|\maketitle| ist es möglich, auch mehrere Briefe (Serienbrief) in einem einzigen Dokument zu setzen.
+% Ein neuer Brief wird immer auf einer rechten Seite begonnen.
+% Auch mehrere zweiseitige Briefe sind problemlos am Stück duplex-druckbar.
+% Die sich ändernden Daten müssen entsprechend vor dem erneuten Aufruf eingestellt werden und der Briefkörper erneut erstellt werden.
+%
+% \DescribeMacro{\Anrede} \marg{Floskel} Eröffnet den Brief mit der Anrede. Am Ende wird automatisch ein Komma angehängt.
+%
+% \DescribeMacro{\Gruss} \oarg{width}\marg{Grußfloskel}\marg{Name des Absenders} Beendet den Brief mit der Grußfloskel, Unterschrift und dem Namen des Absenders.
+% Das optionale Argument \oarg{width} gibt die Breite (Standard \SI{3.5}{\centi\meter}) der Unterschrift (sofern ein eine Bilddatei mittels \verb|Signatur| festgelegt wurde) und des Unterschriftsstrich an.
+%
+% \subsection{Sonstige Befehle}
 % \DescribeMacro{\Signatur}\marg{Dateiname} Legt die Datei fest, welche als Unterschrift verwendet werden soll.
 % Möglich ist eine Bilddatei (PNG, JPG) oder eine PDF.
 % Sofern eine PDF genutzt wird, wird jedoch nur die erste Seite verwendet.
 % Sofern keine Datei spezifiziert ist, wird entsprechend Platz für eine händische Unterschrift gelassen.
 %
-% \subsubsection{Einstellbare Längen}
+% \subsection{Einstellbare Längen}
 % Die nachfolgend beschriebenen Längen (Standardwert in Klammern) können mit \verb|\setlength{<lengthname>}{<Länge>}| in der Präambel abgeändert werden:
 %
 % \DescribeMacro{\tmargin} (\SI{20}{\milli\meter}) Oberer Rand. Wert muss \(\leq \SI{45}{mm}\) sein, anderenfalls verrutscht das Anschriftfeld.
 %
 % \DescribeMacro{\bmargin} (\SI{20}{\milli\meter}) Unterer Rand. Enthält nicht die Fußzeile!
 %
-% \DescribeMacro{\lmargin} (\SI{25}{\milli\meter}) Linker~-- in doppelseitigem Satz innnerer~-- Rand.
+% \DescribeMacro{\lmargin} (\SI{25}{\milli\meter}) Linker~-- in doppelseitigem Satz innerer~-- Rand.
 %
 % \DescribeMacro{\bmargin} (\SI{20}{\milli\meter}) Rechter~-- in doppelseitigem Satz äußerer~-- Rand.
 %
+% \DescribeMacro{\anschriftvpos} Abstand des Anschriftfelds vom oberen Papierrand, für Version A: \SI{27}{\milli\meter}, für Version B: \SI{45}{\milli\meter}.
+%
+% \DescribeMacro{\anschriftheight} Höhe des Anschriftfelds: \SI{45}{\milli\meter}.
+%
+% \DescribeMacro{\anschriftwidth} Breite des Anschriftfelds: \SI{80}{\milli\meter}.
+%
+% \DescribeMacro{\informationwidth} (\SI{75}{\milli\meter}) Breite des Informationsblocks, nach DIN~5008 maximal \SI{75}{\milli\meter}.
+%
+% \DescribeMacro{\faltmarkelength} (\SI{4}{\milli\meter}) Länge der Faltmarken.
+%
+% \DescribeMacro{\faltmarkemargin} (\SI{5}{\milli\meter}) Abstand der Faltmarken vom linken Papierrand.
+%
+% \DescribeMacro{\lochmarkelength} (\SI{4}{\milli\meter}) Länge der Lochmarke.
+%
+% \DescribeMacro{\lochmarkemargin} (\SI{5}{\milli\meter}) Abstand der Lochmarke vom linken Papierrand.
+%
+% \DescribeMacro{\titlesep} (\SI{8.46}{\milli\meter}) Abstand zwischen Anschriftzone\slash{}Informationsblock und Betreffzeile.
+%
 % Der Textkörper ist mit den folgenden Werten gesetzt:
 %
-% \DescribeMacro{\parindent} (\SI{0}{\milli\meter}) Einzu der ersten Zeile eines Absatzes.
+% \DescribeMacro{\parindent} (\SI{0}{\milli\meter}) Einzug der ersten Zeile eines Absatzes.
 %
 % \DescribeMacro{\parskip} (\(\SI{1}{baselineskip} \pm \SI{0.2}{ex}\)) Abstand zwischen zwei Absätzen. Dies entspricht einer Leerzeile mit einer Flexibilität von \(\frac{1}{5}\) der Höhe des Buchstaben \enquote{x}.
 %
-% \subsection{Briefkörper}
-% Bisher wurde alles in der Präambel festgelegt. In diesem Abschnitt sind die Befehle beschrieben, welche innerhalb der \verb|document|-Umgebung verfügbar sind.
-%
-% \DescribeMacro{\maketitle} Setzt die erste Seite.
-% Dies ist das erste Befehl, welcher innerhalb der \verb|document|-Umgebung aufgerufen werden sollte.
-% Es wird der Briefkopf, Adressfeld, Absenderfeld, Bezugszeichen- und Betreffzeile gesetzt.
-% 
-% Durch mehrmalige Nutzung von \verb|\maketitle| ist es möglich, auch mehrere Briefe (Serienbrief) in einem einzigen Dokument zu setzen.
-% Ein neuer Brief wird immer auf einer rechten Seite begonnen.
-% Bei Option \verb|oneside| ist dies eine neue Seite, mit Option \verb|twoside| auf einer ungeraden Seite) begonnen, wenn nötig, wirde eine Leerseite eingefügt.
-% Damit sind auch mehrere zweiseitige Briefe problemlos am Stück duplex-druckbar.
-% Die sich ändernden Daten müssen entsprechend vor dem erneuten Aufruf eingestellt werden und der Breifkörper erneut erstellt werden.
-%
-% \DescribeMacro{\Anrede} \marg{Floskel} Eröffnet den Brief mit der Anrede. Am Ende wird automatisch ein Komma angehängt.
-%
-% \DescribeMacro{\Gruss} \oarg{width}\marg{Grußfloskel} Beendet den Brief mit der Grußfloskel, Unterschrift und dem Namen des Absenders.
-% Das optionale Argument \oarg{width} gibt die Breite (Standard \SI{3.5}{\centi\meter}) der Unterschrift und des Unterschriftsstrich an.
 %
 % \section{Beispiel}
 % Nachfolgend ist die Quelldatei und Ergebnis eines Beispielbriefs aufgeführt.
@@ -270,8 +232,8 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 %<*class>
 \def\fileauthor{Bertram Richter}
-\def\fileversion{v0.3}
-\def\filedate{2022/03/18}
+\def\fileversion{v0.4}
+\def\filedate{2022-08-14}
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{brbrief}[\filedate\space\fileversion\space Briefvorlage by \fileauthor]
 %    \end{macrocode}
@@ -307,7 +269,7 @@ Running "make install" installs the files in the local TeX tree.
 % Default Einstellungen anwenden, und Optionen and die Elternklasse weitergeben.
 %    \begin{macrocode}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
-\ExecuteOptions{punchmark,foldmark, B}
+\ExecuteOptions{punchmark,foldmark, A}
 \ProcessOptions\relax
 \LoadClass{article}
 %    \end{macrocode}
@@ -338,8 +300,8 @@ Running "make install" installs the files in the local TeX tree.
 \newlength{\bmargin}%
 \newlength{\lmargin}%
 \newlength{\rmargin}%
-\newlength{\anschriftvpos}%
 \newlength{\anschrifthpos}%
+\newlength{\anschriftvpos}%
 \newlength{\anschriftheight}%
 \newlength{\anschriftwidth}%
 \newlength{\informationvpos}%
@@ -384,7 +346,7 @@ Running "make install" installs the files in the local TeX tree.
     \setlength{\faltmarkevbot}{210mm}%
 \fi
 %    \end{macrocode}
-% Am Begin des Dokuments werden die Abmessungseinstellungen angewendet und in \LaTeX{}-interne Befehle geschrieben.
+% Am Beginn des Dokuments werden die Abmessungseinstellungen angewendet und in \LaTeX{}-interne Befehle geschrieben.
 %    \begin{macrocode}
 \AtBeginDocument{
     \addtolength{\anschriftvpos}{-\tmargin}%
@@ -436,16 +398,12 @@ Running "make install" installs the files in the local TeX tree.
 %    \end{macrocode}
 % \subsection{Speichervariablen}
 % Speichervariablen, diese enthalten auch die Standardwerte.
-% Zuerst kommen Speichervariablen für das Adressfeld, für das Absenderfeld, für die Bezugszeichenzeile und zuletzt für den Brief.
 %    \begin{macrocode}
 \newcommand{\@Vermerkzone}{}
 \newcommand{\@Anschriftzone}{}
 \newcommand{\@Informationsblock}{}
 \newcommand{\@Betreff}{}
-\newcommand{\@Header}{}
-\newcommand{\@Footer}{}
-\newcommand{\@Firstfooter}{\@empty}
-\newcommand{\@Briefkopf}{\@empty}
+\newcommand{\@Briefkopf}{}
 \newcommand*{\@Signatur}{}
 %    \end{macrocode}
 % \subsection{Interne Befehle}
@@ -483,14 +441,17 @@ Running "make install" installs the files in the local TeX tree.
 }%
 %    \end{macrocode}
 % \DescribeMacro{\PrintOptionalField}
-% Wenn \verb|a| definiert ist und non-whitespace Elemente enthält, wird \verb|a| gedruckt und ein neuer Absatz begonnen. Ansonsten passiert nichts.
+% Wenn \verb|a| definiert ist und non-whitespace Elemente enthält, wird \verb|a| gedruckt und ein neuer Absatz begonnen.
+% Ansonsten passiert nichts.
 %    \begin{macrocode}
 \newcommand{\PrintOptionalField}[1]{%
     \PrintIfDefined{#1}{#1\par}{}%
 }%
 %    \end{macrocode}
 % \DescribeMacro{\PrintGraphic}\marg{size}\marg{filename}
-% Dieses Macro untersucht, die \marg{filename} eine existierende Datei ist. Sofern erfolgreich, wird diese mit \verb|\includegraphics[size]{filename}| geladen. Anderenfalls wird ein Fehler ausgegeben.
+% Dieses Macro testet auf die Existent der Datei \marg{filename}.
+% Sofern erfolgreich, wird diese mit \verb|\includegraphics[size]{filename}| geladen.
+% Anderenfalls wird ein Fehler ausgegeben.
 %    \begin{macrocode}
 \newcommand{\PrintGraphic}[2]{{%
         \def\@brempty{}%
@@ -548,8 +509,8 @@ Running "make install" installs the files in the local TeX tree.
     \begin{minipage}[t][\anschriftheight][c]{\anschriftwidth}%
         \setlength{\parindent}{0pt}%
         \setlength{\parskip}{0pt}%
-        {\@Vermerkzone{}}%
-        \\[-.8em]\rule{80mm}{0.5pt}\\%
+        {\sffamily\scriptsize\@Vermerkzone{}}%
+        \\[-.8em]\rule{\anschriftwidth}{0.5pt}\\%
         {\@Anschriftzone{}}%
     \end{minipage}%
 }
@@ -575,19 +536,11 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand{\Informationsblock}[1]{\renewcommand{\@Informationsblock}{#1}}
 \newcommand{\Betreff}[1]{\renewcommand{\@Betreff}{#1}}
 \newcommand{\Briefkopf}[1]{\renewcommand{\@Briefkopf}{#1}}
-\newcommand{\Header}[1]{\renewcommand{\@Header}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
-\newcommand{\Firstheader}[1]{\renewcommand{\@Firstheader}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
-\newcommand{\Footer}[1]{\renewcommand{\@Footer}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
-\newcommand{\Firstfooter}[1]{\renewcommand{\@Firstfooter}{\begin{minipage}[t]{\textwidth}#1\end{minipage}}}
 \newcommand*{\Signatur}[1]{\renewcommand*{\@Signatur}{#1}}
 %    \end{macrocode}
-% \subsubsection{Fußzeilen}
-% Die Erste Seite hat eine eigene Fußzeile
-%    \begin{macrocode}
-
 % \subsubsection{Typesetting commands}
 % \DescribeMacro{\Anrede}
-% Anrede
+% Anrede, ein Komma wird angehängt.
 %    \begin{macrocode}
 \newcommand{\Anrede}[1]{%
     {\flushleft#1,\par}%
@@ -605,16 +558,17 @@ Running "make install" installs the files in the local TeX tree.
 % \DescribeMacro{\maketitle}
 % Die erste Seite setzen. Folgendes passiert hier:
 % \begin{itemize}
-% 	\item Neue ungerade (rechte) Seite beginnen, wenn nötig, wird eine Leerseite eingefügt. Dies ist sinnvoll, um mehrere Briefe in einem Dokument hintereinander zu setzen.
+% 	\item Neue ungerade (rechte) Seite beginnen, wenn nötig wird eine Leerseite eingefügt.
+% 		Dies ist sinnvoll, um mehrere Briefe in einem Dokument hintereinander zu setzen.
 % 	\item Die Seitenzahl wird auf 1 zurückgesetzt.
-% 	\item Den Seitenanstellungen \verb|brief| für alle Seiten und \verb|briefersteseite| für die aktuelle Seite auswählen.
+% 	\item Den Seiteneinstellungen \verb|briefersteseite| für die aktuelle Seite und \verb|brief| für alle weiteren Seiten auswählen.
 % 	\item Kopfbereich setzen.
 % 	\item Anschrift- und Absenderzone nebeneinander setzen.
 % 	\item Bezugszeichenzeile und den Betreff setzen
 % 	\item PDF Metadaten werden eingestellt
-% 	\item Hintergrund (Briefpapier) einstellen
 % 	\end{itemize}
-% \changes{v0.3}{2022/03/18}{Fixed the new page to start on the right side with empty page, if necessary}
+% \changes{v0.3}{2022-03-18}{Fixed the new page to start on the right side with empty page, if necessary}
+% \changes{v0.4}{2022-08-14}{Each field now has only a single macro; Added made most length configurable; Added options for version A and version B}
 %    \begin{macrocode}
 \renewcommand{\maketitle}{%
     \clearpage{\thispagestyle{empty}\cleardoublepage}%
@@ -624,7 +578,9 @@ Running "make install" installs the files in the local TeX tree.
     \thispagestyle{briefersteseite}%
     \PrintKopfbereich{}%
     \begin{minipage}[t]{\textwidth}%
-        \begin{minipage}[t]{\textwidth}\PrintAnschriftzone\hfill\PrintInformationsblock\end{minipage}%
+        \begin{minipage}[t]{\textwidth}%
+            \PrintAnschriftzone\hfill\PrintInformationsblock%
+        \end{minipage}%
         \vspace{\titlesep}%
     \end{minipage}
     {\flushleft\textbf{\@Betreff}\vspace{\baselineskip}}%
