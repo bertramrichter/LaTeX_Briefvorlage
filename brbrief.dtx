@@ -90,6 +90,7 @@ Running "make install" installs the files in the local TeX tree.
 	\sisetup{locale=DE}
 \usepackage{verbatim}
 \usepackage{pdfpages}
+\usepackage[shortcuts]{extdash}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -102,7 +103,7 @@ Running "make install" installs the files in the local TeX tree.
 % \fi
 % 
 % \DoNotIndex{\newcommand,\newenvironment}
-% \title{\textsf{\jobname} -- \LaTeX{} Briefvorlage für private Korrespondenz
+% \title{\textsf{\jobname}~-- \LaTeX{} Briefvorlage für private Korrespondenz
 %     \thanks{Dokumentation für \textsf{\jobname}~\fileversion, Versionsdatum: \filedate.}}
 % \author{\fileauthor}
 % \date{\filedate}
@@ -112,13 +113,13 @@ Running "make install" installs the files in the local TeX tree.
 % \begin{abstract}
 %     \noindent
 %     Dieses Dokument beschreibt \textsf{\jobname}.
-%     Mit \textsf{\jobname} können DIN~5008-konforme Briefe relativ unkompliziert verfasst und gesetzt werden.
+%     Mit \textsf{\jobname} können DIN~5008\-/konforme Briefe relativ unkompliziert verfasst und gesetzt werden.
 %     Gedacht ist sie zur Nutzung als Briefvorlage für den privaten Schriftverkehr.
 %     Entwickelt, um den Ansprüchen des Autors von Stil und Einfachheit zu genügen.
 % \end{abstract}
 %
 % \section{Klassenoptionen}
-% Die Klasse \textsf{\jobname} basiert auf \verb|article| und besitzt die folgenden Klassen-Optionen.
+% Die Klasse \textsf{\jobname} basiert auf \verb|article| und besitzt die folgenden Klassen\-/Optionen.
 % Grundsätzlich werden (fast) alle in \verb|article| verfügbaren Optionen unterstützt.
 % Jedoch ist das Papierformat auf A4 im Hochformat beschränkt.
 %
@@ -159,15 +160,15 @@ Running "make install" installs the files in the local TeX tree.
 % Nun folgen Befehle, welche für den Textsatz verwendet werden.
 %
 % \DescribeMacro{\maketitle} Setzt die erste Seite.
-% Dies ist das erste Befehl, welcher innerhalb der \verb|document|-Umgebung aufgerufen werden sollte.
+% Dies ist das erste Befehl, welcher innerhalb der \verb|document|\-/Umgebung aufgerufen werden sollte.
 % Es wird der Briefkopf, Adressfeld, Informationsblock und Betreffzeile gesetzt.
 % 
 % Durch mehrmalige Nutzung von \verb|\maketitle| ist es möglich, auch mehrere Briefe (Serienbrief) in einem einzigen Dokument zu setzen.
 % Ein neuer Brief wird immer auf einer rechten Seite begonnen.
-% Auch mehrere zweiseitige Briefe sind problemlos am Stück duplex-druckbar.
+% Auch mehrere zweiseitige Briefe sind problemlos am Stück duplex\-/druckbar.
 % Die sich ändernden Daten müssen entsprechend vor dem erneuten Aufruf eingestellt werden und der Briefkörper erneut erstellt werden.
 %
-% \DescribeMacro{\Anrede} \marg{Floskel} Eröffnet den Brief mit der Anrede. Am Ende wird automatisch ein Komma angehängt.
+% \DescribeMacro{\Anrede} \marg{Floskel} Eröffnet den Brief mit der Anrede, welche vom nachfolgenden Text durch einen Absatz getrennt wird.
 %
 % \DescribeMacro{\Gruss} \oarg{width}\marg{Grußfloskel}\marg{Name des Absenders} Beendet den Brief mit der Grußfloskel, Unterschrift und dem Namen des Absenders.
 % Das optionale Argument \oarg{width} gibt die Breite (Standard \SI{3.5}{\centi\meter}) der Unterschrift (sofern ein eine Bilddatei mittels \verb|Signatur| festgelegt wurde) und des Unterschriftsstrich an.
@@ -281,11 +282,11 @@ Running "make install" installs the files in the local TeX tree.
 %    \begin{macrocode}
 \RequirePackage[a4paper, portrait, nohead, includefoot]{geometry}
 %    \end{macrocode}
-% Paket für Mikro-Typographie für noch gleichmäßigeres Schriftbild
+% Paket für Mikro\-/Typographie für noch gleichmäßigeres Schriftbild
 %    \begin{macrocode}
 \RequirePackage{microtype}
 %    \end{macrocode}
-% Paket für Verlinkungen, ohne rote Boxes um Links, Links umbrechen, wenn nötig und PDF-Metadaten setzen.
+% Paket für Verlinkungen, ohne rote Boxes um Links, Links umbrechen, wenn nötig und PDF\-/Metadaten setzen.
 %    \begin{macrocode}
 \RequirePackage[%
         hidelinks,%
@@ -441,7 +442,7 @@ Running "make install" installs the files in the local TeX tree.
 }%
 %    \end{macrocode}
 % \DescribeMacro{\PrintOptionalField}
-% Wenn \verb|a| definiert ist und non-whitespace Elemente enthält, wird \verb|a| gedruckt und ein neuer Absatz begonnen.
+% Wenn \verb|a| definiert ist und non\-/whitespace Elemente enthält, wird \verb|a| gedruckt und ein neuer Absatz begonnen.
 % Ansonsten passiert nichts.
 %    \begin{macrocode}
 \newcommand{\PrintOptionalField}[1]{%
@@ -503,7 +504,7 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand{\mailsymbol}{\ding{41}}
 %    \end{macrocode}
 % \DescribeMacro{\PrintAnschriftzone}
-% Adressfeld, bestehend aus der \SI{12.7}{\milli\meter} hohen Zusatz- und Vermerkzone und der \SI{27.3}{\milli\meter} hohen Anschriftzone.
+% Adressfeld, bestehend aus der \SI{12.7}{\milli\meter} hohen Zusatz\-/ und Vermerkzone und der \SI{27.3}{\milli\meter} hohen Anschriftzone.
 %    \begin{macrocode}
 \newcommand{\PrintAnschriftzone}{%
     \begin{minipage}[t][\anschriftheight][c]{\anschriftwidth}%
@@ -540,10 +541,10 @@ Running "make install" installs the files in the local TeX tree.
 %    \end{macrocode}
 % \subsubsection{Typesetting commands}
 % \DescribeMacro{\Anrede}
-% Anrede, ein Komma wird angehängt.
+% Anrede\-/Floskel
 %    \begin{macrocode}
 \newcommand{\Anrede}[1]{%
-    {\flushleft#1,\par}%
+    {#1\par}%
 }
 %    \end{macrocode}
 % \DescribeMacro{\Gruss}
@@ -563,7 +564,7 @@ Running "make install" installs the files in the local TeX tree.
 % 	\item Die Seitenzahl wird auf 1 zurückgesetzt.
 % 	\item Den Seiteneinstellungen \verb|briefersteseite| für die aktuelle Seite und \verb|brief| für alle weiteren Seiten auswählen.
 % 	\item Kopfbereich setzen.
-% 	\item Anschrift- und Absenderzone nebeneinander setzen.
+% 	\item Anschrift\-/ und Absenderzone nebeneinander setzen.
 % 	\item Bezugszeichenzeile und den Betreff setzen
 % 	\item PDF Metadaten werden eingestellt
 % 	\end{itemize}
@@ -586,6 +587,7 @@ Running "make install" installs the files in the local TeX tree.
     {\flushleft\textbf{\@Betreff}\vspace{\baselineskip}}%
     \setlength{\parindent}{0pt}%
     \setlength{\parskip}{1\baselineskip plus 0.2ex minus 0.2ex}%
+    \par
     \hypersetup{%
         pdfsubject = {\@Betreff},%
         pdftitle = {\@Betreff},%
