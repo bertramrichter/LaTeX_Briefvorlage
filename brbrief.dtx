@@ -306,7 +306,7 @@ Running "make install" installs the files in the local TeX tree.
 \newlength{\anschriftheight}%
 \newlength{\anschriftwidth}%
 \newlength{\informationvpos}%
-\newlength{\informationhpos}%
+\newlength{\informationheight}%
 \newlength{\informationwidth}%
 \newlength{\faltmarkevtop}%
 \newlength{\faltmarkevbot}%
@@ -325,7 +325,7 @@ Running "make install" installs the files in the local TeX tree.
 \setlength{\anschrifthpos}{25mm}%
 \setlength{\anschriftheight}{45mm}%
 \setlength{\anschriftwidth}{80mm}%
-\setlength{\informationhpos}{125mm}%
+\setlength{\informationheight}{\anschriftheight}%
 \setlength{\informationwidth}{75mm}%
 \setlength{\titlesep}{8.46mm}%
 \setlength{\faltmarkelength}{4mm}%
@@ -346,6 +346,11 @@ Running "make install" installs the files in the local TeX tree.
     \setlength{\faltmarkevtop}{105mm}%
     \setlength{\faltmarkevbot}{210mm}%
 \fi
+%    \end{macrocode}
+% Die Positionierung des Informationsblock kann über die folgenden Parameter eingestellt werden.
+% Sofern 
+%    \begin{macrocode}
+\newcommand{\informationinnerpos}{c}
 %    \end{macrocode}
 % Am Beginn des Dokuments werden die Abmessungseinstellungen angewendet und in \LaTeX{}-interne Befehle geschrieben.
 %    \begin{macrocode}
@@ -520,8 +525,8 @@ Running "make install" installs the files in the local TeX tree.
 % Feld für Absenderinfos
 %    \begin{macrocode}
 \newcommand{\PrintInformationsblock}{%
-    \begin{minipage}[t][][t]{\informationwidth}%
-        \vspace{5mm}
+    \begin{minipage}[t][\informationheight][\informationinnerpos]{\informationwidth}%
+        \vspace{5mm}%		Needed to fix the position, I don't get why
         \setlength{\parindent}{0pt}%
         \setlength{\parskip}{0pt}%
         \@Informationsblock
@@ -579,9 +584,7 @@ Running "make install" installs the files in the local TeX tree.
     \thispagestyle{briefersteseite}%
     \PrintKopfbereich{}%
     \begin{minipage}[t]{\textwidth}%
-        \begin{minipage}[t]{\textwidth}%
             \PrintAnschriftzone\hfill\PrintInformationsblock%
-        \end{minipage}%
         \vspace{\titlesep}%
     \end{minipage}
     {\flushleft\textbf{\@Betreff}\vspace{\baselineskip}}%
