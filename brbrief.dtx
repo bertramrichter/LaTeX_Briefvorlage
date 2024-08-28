@@ -135,7 +135,11 @@ Running "make install" installs the files in the local TeX tree.
 %
 % \DescribeMacro{A\slash{}B} Version A mit hochgestelltem Anschriftfeld oder Version B tiefgestelltem Anschriftfeld.
 % Standardmäßig ist \verb|A| ausgewählt, da damit mehr Platz für auf der Ersten Seite ist.
-%
+% 
+% \textsf{\jobname} benötigt \verb|babel| um die Daten und Sprache der Seitenzahl anpassen zu können.
+% Daher ist in der Präambel bitte zwingend \verb|\usepackage[<options>]{babel}| zu laden (wie im Beispiel schon vorgesehen).
+% Die Sprache kann entweder direkt als Paketoption über \verb|<options>| an \verb|babel| oder aber als Klassenoption übergeben werden.
+% 
 % \section{Verfügbare Befehle}
 % \subsection{Für den Briefkopf benötigt}
 % \DescribeMacro{\Briefkopf}\marg{text} Legt den Inhalt des Briefkopfs (Bereich über dem Adressfeld) fest.
@@ -384,8 +388,8 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand{\ps@brief}{%
     \renewcommand{\@oddhead}{\if@foldmark\@faltmarken\fi\if@punchmark\@lochmarke\fi}
     \renewcommand{\@evenhead}{\@empty}
-    \renewcommand{\@oddfoot}{\hfill{}Seite\:\thepage{}}%
-    \renewcommand{\@evenfoot}{Seite\:\thepage\hfill{}}%
+    \renewcommand{\@oddfoot}{\hfill{}\pagename\:\thepage{}}%
+    \renewcommand{\@evenfoot}{\pagename\:\thepage\hfill{}}%
 }
 %    \end{macrocode}
 % Page style für die erste Seite:
@@ -393,7 +397,7 @@ Running "make install" installs the files in the local TeX tree.
 \newcommand{\ps@briefersteseite}{%
     \renewcommand{\@oddhead}{\if@foldmark\@faltmarken\fi\if@punchmark\@lochmarke\fi}
     \renewcommand{\@evenhead}{\@empty}
-    \renewcommand{\@oddfoot}{\hfill{}Seite\:\thepage{}}%
+    \renewcommand{\@oddfoot}{\hfill{}\pagename\:\thepage{}}%
     \renewcommand{\@evenfoot}{\@empty}%
 }
 %    \end{macrocode}
